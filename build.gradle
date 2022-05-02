@@ -1,3 +1,4 @@
+//file:noinspection GroovyAssignabilityCheck
 
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -24,7 +25,6 @@ def modId = "fire_protection_equipment"
 
 version = "1.0"
 group = "com.github.teamrestricted"
-archivesBaseName = "fpe"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
