@@ -1,0 +1,9 @@
+.gradle
+.idea
+build
+
+run_client
+run_server
+run_data
+
+ThingsOnThis/ExportedJar

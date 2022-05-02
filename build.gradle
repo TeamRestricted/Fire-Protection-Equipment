@@ -1,0 +1,81 @@
+
+import java.time.Instant
+import java.time.temporal.ChronoUnit
+
+buildscript {
+    repositories {
+        maven { url = "https://files.minecraftforge.net/maven" }
+        maven { url = "https://maven.parchmentmc.org" }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "5.1.+", changing: true
+        classpath group: "org.parchmentmc", name: "librarian", version: "1.+"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21"
+    }
+}
+
+apply plugin: "net.minecraftforge.gradle"
+apply plugin: "org.parchmentmc.librarian.forgegradle"
+apply plugin: "kotlin"
+apply from: 'https://raw.githubusercontent.com/thedarkcolour/KotlinForForge/site/thedarkcolour/kotlinforforge/gradle/kff-3.3.2.gradle'
+
+def modId = "fire_protection_equipment"
+
+version = "1.0"
+group = "com.github.teamrestricted"
+archivesBaseName = "fpe"
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+minecraft {
+    mappings channel: "parchment", version: "2022.03.13-1.18.2"
+
+    runs {
+        client {
+            workingDirectory project.file("run_client")
+            property "forge.logging.markers", "REGISTRIES"
+            property "forge.logging.console.level", "debug"
+            mods.create(modId) { it.source sourceSets.main }
+        }
+
+        server {
+            workingDirectory project.file("run_server")
+            property "forge.logging.markers", "REGISTRIES"
+            property "forge.logging.console.level", "debug"
+            mods.create(modId) { it.source sourceSets.main }
+        }
+
+        data {
+            workingDirectory project.file("run_data")
+            property "forge.logging.markers", "REGISTRIES"
+            property "forge.logging.console.level", "debug"
+            mods.create(modId) { it.source sourceSets.main }
+            args "--mod", modId, "--existing-mod", modId, "--all", "--output", file("src/generated/resources/")
+        }
+    }
+}
+
+sourceSets.main.resources {
+    srcDir "src/generated/resources"
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:1.18.2-40.1.0"
+}
+
+jar {
+    manifest {
+        attributes([
+                "Specification-Title"     : "${modId}",
+                "Specification-Vendor"    : "TeamRestricted",
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : "${modId}",
+                "Implementation-Version"  : "${project.version}",
+                "Implementation-Vendor"   : "TeamRestricted",
+                "Implementation-Timestamp": "${Instant.now().truncatedTo(ChronoUnit.SECONDS)}"
+        ])
+    }
+}
+
+jar.finalizedBy("reobfJar")

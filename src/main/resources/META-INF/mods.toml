@@ -1,0 +1,11 @@
+modLoader="kotlinforforge"
+loaderVersion="[3,)"
+license="MIT"
+
+[[mods]]
+modId="fire_protection_equipment"
+version="${file.jarVersion}"
+displayName="Fire Protection Equipment"
+credits="Team Restricted Present"
+authors="Team Restricted"
+description="TODO()"
