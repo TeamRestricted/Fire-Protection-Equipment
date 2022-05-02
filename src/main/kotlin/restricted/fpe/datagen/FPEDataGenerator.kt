@@ -41,4 +41,10 @@ private fun registerLanguages() = FPELanguage.apply {
 		zh("消防设备")
 		tw("消防設施")
 	}
+
+	enchant(FPE.Enchants.FireWalker) {
+		en("Fire Walker")
+		zh("十万火急")
+		tw("十萬火急")
+	}
 }

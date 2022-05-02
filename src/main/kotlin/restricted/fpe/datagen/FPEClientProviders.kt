@@ -70,6 +70,10 @@ internal object FPELanguage {
 		entries += LanguageEntry(block.descriptionId).apply(func)
 	}
 
+	fun enchant(enchant: Enchantment, func: LanguageEntry.() -> Unit) {
+		entries += LanguageEntry(enchant.descriptionId).apply(func)
+	}
+
 }
 
 internal class LanguageEntry(val key: String) {
