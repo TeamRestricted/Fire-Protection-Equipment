@@ -7,6 +7,8 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.*
 import net.minecraft.world.level.Level
 import restricted.fpe.FPE
+import restricted.fpe.extinguish.ExtinguishContext
+import restricted.fpe.extinguish.ExtinguishType
 import restricted.fpe.pos
 
 private val prop = Item.Properties().rarity(Rarity.UNCOMMON).tab(FPE.Tabs.Default).stacksTo(1).durability(15000)
@@ -14,6 +16,8 @@ private val prop = Item.Properties().rarity(Rarity.UNCOMMON).tab(FPE.Tabs.Defaul
 object FireExtinguisherItem: Item(prop) {
 
 	private fun getExtinguisherLevel(world: Level, stack: ItemStack): Int = 3
+
+	private fun getExtinguisherType(): ExtinguishType = ExtinguishType.DryChemical
 
 	override fun getUseDuration(pStack: ItemStack): Int {
 		return 10
@@ -39,7 +43,8 @@ object FireExtinguisherItem: Item(prop) {
 			val hit = entity.pick(10.0, 1.0F, false)
 			val extinguishLoc = hit.location.pos
 			val extinguishLevel = getExtinguisherLevel(world, stack)
-			FPE.extinguishFire(world, extinguishLoc, extinguishLevel)
+			val ctx = ExtinguishContext(world, extinguishLoc, extinguishLevel, getExtinguisherType(), player = entity)
+			FPE.extinguishFire(ctx)
 		}
 		super.releaseUsing(stack, world, entity, chargedTime)
 	}

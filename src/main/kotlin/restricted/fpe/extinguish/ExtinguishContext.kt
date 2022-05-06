@@ -4,15 +4,17 @@ import net.minecraft.core.BlockPos
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
-import restricted.fpe.api.FireType
+import net.minecraft.world.level.levelgen.structure.BoundingBox
+import restricted.fpe.boundingBoxOfCenter
 
 data class ExtinguishContext(
 	val world: Level,
 	val centerPos: BlockPos,
-	val extinguishLevel: Int,
-	val extinguishType: FireType,
+	val size: Int,
+	val type: ExtinguishType,
 
-	val extinguishingBlock: BlockPos? = null,
-	val extinguishingPlayer: Player? = null,
-	val extinguishingItem: ItemStack? = null
-)
+	val player: Player? = null,
+	val itemstack: ItemStack? = null
+) {
+	val boundingBox: BoundingBox get() = boundingBoxOfCenter(centerPos, size, size, size)
+}

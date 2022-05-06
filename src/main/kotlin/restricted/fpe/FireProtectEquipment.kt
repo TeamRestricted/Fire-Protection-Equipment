@@ -2,13 +2,13 @@
 
 package restricted.fpe
 
-import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.item.*
 import net.minecraft.world.item.enchantment.Enchantment
-import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Blocks
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
 import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent
@@ -16,16 +16,17 @@ import net.minecraftforge.registries.DeferredRegister
 import net.minecraftforge.registries.ForgeRegistries
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
-import restricted.fpe.api.FireProtectionApiImpl
-import restricted.fpe.api.FireType
 import restricted.fpe.block.FireHydrantBlock
 import restricted.fpe.enchant.FireWalkerEnchant
 import restricted.fpe.enchant.SpreadingFireEnchant
 import restricted.fpe.extinguish.ExtinguishContext
+import restricted.fpe.extinguish.ExtinguishRecipe
+import restricted.fpe.extinguish.ExtinguishRecipe.MiniBlockState.Builder.Companion.buildMiniState
 import restricted.fpe.item.FireExtinguisherItem
 import restricted.fpe.item.FireItem
 import restricted.fpe.potion.SpreadingFireEffect
 import thedarkcolour.kotlinforforge.forge.*
+import kotlin.math.log
 
 const val ModId = "fire_protection_equipment"
 
@@ -33,8 +34,6 @@ val logger: Logger = LogManager.getLogger(ModId)
 
 @Mod(ModId)
 object FPE {
-
-	val apiImpl = FireProtectionApiImpl
 
 	init {
 		Enchants.registry.register(MOD_BUS)
@@ -47,7 +46,7 @@ object FPE {
 			serverTarget = { MOD_BUS.addListener(::serverSetup) }
 		)
 
-		apiImpl.registerFireBlock(MinecraftBlocks.FIRE, FireType.NORMAL_FIRE)
+		registerFireRecipes()
 	}
 
 	private fun clientSetup(e: FMLClientSetupEvent) {
@@ -56,6 +55,25 @@ object FPE {
 	}
 
 	private fun serverSetup(e: FMLDedicatedServerSetupEvent) {
+	}
+
+	private fun registerFireRecipes() {
+		logger.info("Registering Fire Recipes")
+
+		ExtinguishRecipe.register(MinecraftBlocks.FIRE.buildMiniState()) { ctx, _, pos ->
+			ctx.world.setBlock(pos, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), buildSetBlockFlag(updateBlock = true, sendToClient = true))
+			ctx.world.addParticle(ParticleTypes.SMOKE, pos.vec3, 0.0, 0.0, 0.0)
+			println("World = ${ctx.world is ServerLevel}")
+			ctx.world.runOnRemote {
+				val v3 = pos.vec3
+				sendParticles(ParticleTypes.CLOUD, v3.x, v3.y, v3.z, (1..20).random(), 0.0, 0.0, 0.0, 0.2)
+			}
+		}
+
+		logger.info("End register")
+		ExtinguishRecipe.recipes.cellSet().forEach { (state, type, func) ->
+			logger.info("$state & $type => $func")
+		}// TODO: Removal
 	}
 
 	object Blocks {
@@ -97,41 +115,13 @@ object FPE {
 		val SpreadingFire by registry.registerObject("spreading_fire") { SpreadingFireEffect }
 	}
 
-	@Deprecated(
-		"", ReplaceWith(
-			"extinguishFire(ExtinguishContext(world, loc, level, extinguishType))",
-			"restricted.fpe.FPE.extinguishFire",
-			"restricted.fpe.extinguish.ExtinguishContext"
-		)
-	)
-	fun extinguishFire(
-		world: Level,
-		loc: BlockPos,
-		level: Int,
-		extinguishType: FireType = FireType.NORMAL_FIRE
-	) {
-		extinguishFire(ExtinguishContext(world, loc, level, extinguishType))
-	}
-
 	fun extinguishFire(context: ExtinguishContext) {
-		boundingBoxOfCenter(context.centerPos, context.extinguishLevel).forEach {
+		context.boundingBox.forEach {
 			val state = context.world.getBlockState(it)
-			val block = state.block
-			val fireType = block.fireType
-			if(fireType != null) {
-				if(fireType == context.extinguishType) {
-					context.world.setBlock(it, MinecraftBlocks.AIR.defaultBlockState(), 3)
-				} else {
-					context.world.addParticle(
-						ParticleTypes.SMOKE,
-						it.x.toDouble(),
-						it.y.toDouble(),
-						it.z.toDouble(),
-						0.0,
-						0.0,
-						0.0
-					)
-				}
+			val func = ExtinguishRecipe[state, context.type]
+			if(func != null) {
+				func(context, state, it)
+				println("$state & ${context.type.name} = $func") // TODO: Removal
 			}
 		}
 	}
