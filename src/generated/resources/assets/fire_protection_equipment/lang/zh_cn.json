@@ -1,4 +1,7 @@
 {
   "block.fire_protection_equipment.fire_hydrant": "\u6D88\u9632\u6813",
-  "item.fire_protection_equipment.fire": "\u6D88\u9632\u8BBE\u5907"
+  "enchantment.fire_protection_equipment.fire_walker": "\u5341\u4E07\u706B\u6025",
+  "item.fire_protection_equipment.broken_fire_hydrant": "\u635F\u574F\u7684\u6D88\u9632\u6813",
+  "item.fire_protection_equipment.fire": "\u6D88\u9632\u8BBE\u5907",
+  "itemGroup.fire_protection_equipment": "\u60F3\u4E0D\u51FA\u6765"
 }

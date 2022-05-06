@@ -42,6 +42,12 @@ private fun registerLanguages() = FPELanguage.apply {
 		tw("消防設施")
 	}
 
+	item(FPE.Items.BrokenFireHydrant) {
+		en("Broken Fire Hydrant")
+		zh("损坏的消防栓")
+		tw("損毀的消防栓")
+	}
+
 	enchant(FPE.Enchants.FireWalker) {
 		en("Fire Walker")
 		zh("十万火急")

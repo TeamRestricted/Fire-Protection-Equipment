@@ -1,4 +1,7 @@
 {
   "block.fire_protection_equipment.fire_hydrant": "Fire Hydrant",
-  "item.fire_protection_equipment.fire": "Fire Protection Equipment"
+  "enchantment.fire_protection_equipment.fire_walker": "Fire Walker",
+  "item.fire_protection_equipment.broken_fire_hydrant": "Broken Fire Hydrant",
+  "item.fire_protection_equipment.fire": "FPE",
+  "itemGroup.fire_protection_equipment": "Fire Protection Equipment"
 }

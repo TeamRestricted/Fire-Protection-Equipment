@@ -7,7 +7,6 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.phys.AABB
 import restricted.fpe.FPE
-import kotlin.random.Random
 
 val SpreadingFireDamageSource = DamageSource("spreading_fire")
 

@@ -1,34 +1,18 @@
 {
   "variants": {
-    "facing=north,broken=false": {
+    "facing=north": {
       "model": "fire_protection_equipment:block/fire_hydrant"
     },
-    "facing=east,broken=false": {
+    "facing=east": {
       "model": "fire_protection_equipment:block/fire_hydrant",
       "y": 90
     },
-    "facing=south,broken=false": {
+    "facing=south": {
       "model": "fire_protection_equipment:block/fire_hydrant",
       "y": 180
     },
-    "facing=west,broken=false": {
+    "facing=west": {
       "model": "fire_protection_equipment:block/fire_hydrant",
-      "y": 270
-    },
-
-    "facing=north,broken=true": {
-      "model": "fire_protection_equipment:block/broken_fire_hydrant"
-    },
-    "facing=east,broken=true": {
-      "model": "fire_protection_equipment:block/broken_fire_hydrant",
-      "y": 90
-    },
-    "facing=south,broken=true": {
-      "model": "fire_protection_equipment:block/broken_fire_hydrant",
-      "y": 180
-    },
-    "facing=west,broken=true": {
-      "model": "fire_protection_equipment:block/broken_fire_hydrant",
       "y": 270
     }
   }
