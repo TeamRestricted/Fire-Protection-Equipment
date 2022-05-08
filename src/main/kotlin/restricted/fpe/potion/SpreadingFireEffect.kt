@@ -6,14 +6,12 @@ import net.minecraft.world.effect.*
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.phys.AABB
-import restricted.fpe.FPE
-
-val SpreadingFireDamageSource = DamageSource("spreading_fire")
-
-private const val factorNextGenDuration = 8
-private const val sizeOfSpreading = 8.0
+import restricted.fpe.*
 
 object SpreadingFireEffect : MobEffect(MobEffectCategory.HARMFUL, 0x2524AB) {
+
+	private const val factorNextGenDuration = 8
+	private const val sizeOfSpreading = 8.0
 
 	fun instance(duration: Int, amplifier: Int) = MobEffectInstance(FPE.MobEffects.SpreadingFire, duration, amplifier)
 
@@ -21,7 +19,7 @@ object SpreadingFireEffect : MobEffect(MobEffectCategory.HARMFUL, 0x2524AB) {
 
 	override fun applyEffectTick(entity: LivingEntity, amp: Int) {
 		val ampFactor = amp + 1
-		entity.hurt(SpreadingFireDamageSource, 1.0F + ampFactor * 0.75F)
+		entity.hurt(FPEConst.DamageSourceConst.SpreadingFire, 1.0F + ampFactor * 0.75F)
 		if(entity.health <= 0.0F) {
 			// lv1=4; lv5=10
 			val size = ampFactor * 0.8 + 4.0
@@ -35,10 +33,8 @@ object SpreadingFireEffect : MobEffect(MobEffectCategory.HARMFUL, 0x2524AB) {
 			}
 		}
 
-		if(entity.level.isClientSide) {
-			entity.level.addParticle(ParticleTypes.FLAME, true, entity.x, entity.y + 1.5, entity.z, 0.0, 0.0, 0.0)
+		entity.level.runOnRemote {
+			sendParticles(ParticleTypes.FLAME, entity.position(), 5, 1.0)
 		}
-
-		// TODO: 烈焰粒子效果
 	}
 }

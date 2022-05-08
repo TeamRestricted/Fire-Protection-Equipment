@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "facing=up": {
+      "model": "fire_protection_equipment:block/fire_detector"
+    },
+    "facing=down": {
+      "model": "fire_protection_equipment:block/fire_detector",
+      "x": 180
+    }
+  }
+}

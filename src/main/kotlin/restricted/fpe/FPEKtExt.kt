@@ -15,17 +15,15 @@ import net.minecraft.world.level.material.Material
 import net.minecraft.world.phys.Vec3
 import net.minecraftforge.registries.ForgeRegistryEntry
 import net.minecraftforge.registries.IForgeRegistryEntry
+import restricted.fpe.FPEConst.ItemConst.DefaultItemProp
 
-internal typealias MinecraftItems = net.minecraft.world.item.Items
+internal typealias MinecraftItems = Items
 internal typealias MinecraftBlocks = net.minecraft.world.level.block.Blocks
 
-internal val defaultItemProp = Item.Properties().tab(FPE.Tabs.Default)
-internal val defaultSingleItemProp = Item.Properties().stacksTo(1).tab(FPE.Tabs.Default)
-
-internal fun Block.generateBlockItem(properties: Item.Properties = defaultItemProp): BlockItem =
+internal fun Block.generateBlockItem(properties: Item.Properties = DefaultItemProp): BlockItem =
 	BlockItem(this, properties)
 
-internal fun buildItem(itemProp: Item.Properties = defaultItemProp): Item = Item(itemProp)
+internal fun buildItem(itemProp: Item.Properties = DefaultItemProp): Item = Item(itemProp)
 internal fun buildItem(block: Item.Properties.() -> Unit): Item = buildItem(Item.Properties().apply(block))
 
 internal val <V : IForgeRegistryEntry<V>> ForgeRegistryEntry<V>.registryPath get() = registryName?.path ?: error("")
@@ -55,8 +53,7 @@ internal fun boundingBoxOfCenter(center: BlockPos, xOff: Int, yOff: Int = xOff, 
 
 internal fun BoundingBox.forEach(block: (BlockPos) -> Unit) = BlockPos.betweenClosedStream(this).forEach(block)
 
-internal fun Level.addParticle(particleOptions: ParticleOptions, loc: Vec3, speedX: Double, speedY: Double, speedZ: Double) =
-	addParticle(particleOptions, loc.x, loc.y, loc.z, speedX, speedY, speedZ)
+internal val BoundingBox.AABB get() = net.minecraft.world.phys.AABB.of(this)
 
 internal fun buildSetBlockFlag(
 	updateBlock: Boolean = false,
@@ -95,3 +92,20 @@ internal fun <R> Level.runOnRemote(block: ServerLevel.() -> R): R? {
 		null
 	}
 }
+
+internal fun <R> Level.letOnRemote(block: (ServerLevel) -> R): R? {
+	return if(this is ServerLevel) {
+		block(this)
+	} else {
+		null
+	}
+}
+
+internal fun ServerLevel.sendParticles(particleOptions: ParticleOptions, pos: Vec3, count: Int, speed: Double, offset: Vec3 = Vec3.ZERO) =
+	sendParticles(particleOptions, pos.x, pos.y, pos.z, count, offset.x, offset.y, offset.z, speed)
+
+internal fun buildCompoundTag(block: CompoundTag.() -> Unit) = CompoundTag().apply(block)
+
+internal inline fun <reified T: Enum<T>> enumValueOrNull(name: String) = enumValues<T>().find { it.name == name }
+
+infix fun Int.ifZero(nonZeroValue: Int): Int = if(this == 0) { nonZeroValue } else { this }

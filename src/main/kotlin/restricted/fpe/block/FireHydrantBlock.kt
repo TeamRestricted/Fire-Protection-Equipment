@@ -9,19 +9,18 @@ import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.item.enchantment.EnchantmentHelper
 import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.BlockGetter
-import net.minecraft.world.level.block.*
-import net.minecraft.world.level.block.state.*
-import net.minecraft.world.level.material.Material
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.HorizontalDirectionalBlock
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.storage.loot.LootContext
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
 import restricted.fpe.FPE
+import restricted.fpe.FPEConst
 
-val propFireHydrantBlock: BlockBehaviour.Properties =
-	BlockBehaviour.Properties.of(Material.HEAVY_METAL).strength(5.0F, 1200.0F).sound(SoundType.ANVIL).noOcclusion()
-
-object FireHydrantBlock : HorizontalDirectionalBlock(propFireHydrantBlock) {
+object FireHydrantBlock : HorizontalDirectionalBlock(FPEConst.BlockConst.FireHydrantProp) {
 	private val shape = Block.box(2.0, 0.0, 2.0, 14.0, 26.0, 14.0)
 
 	init {

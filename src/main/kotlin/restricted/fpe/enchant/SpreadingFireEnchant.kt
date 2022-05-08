@@ -5,9 +5,8 @@ import net.minecraft.world.item.BowItem
 import net.minecraft.world.item.CrossbowItem
 import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.item.enchantment.EnchantmentCategory
+import restricted.fpe.FPEConst.EnchantCategory.BowAndCrossbowCategory
 import restricted.fpe.potion.SpreadingFireEffect
-
-val BowAndCrossbowCategory: EnchantmentCategory = EnchantmentCategory.create("bow_and_crossbow") { it is BowItem || it is CrossbowItem }
 
 object SpreadingFireEnchant: Enchantment(Rarity.VERY_RARE, BowAndCrossbowCategory, arrayOf(EquipmentSlot.MAINHAND)) {
 

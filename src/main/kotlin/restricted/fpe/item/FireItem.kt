@@ -1,12 +1,9 @@
 package restricted.fpe.item
 
 import net.minecraft.world.item.Item
-import net.minecraft.world.item.Rarity
-import restricted.fpe.FPE
+import restricted.fpe.FPEConst
 
-private val prop = Item.Properties().rarity(Rarity.COMMON).tab(FPE.Tabs.Default)
-
-object FireItem: Item(prop) {
+object FireItem: Item(FPEConst.ItemConst.DefaultItemProp) {
 
 	// prevent being fired
 	override fun isFireResistant(): Boolean = true

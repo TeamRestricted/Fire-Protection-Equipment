@@ -2,13 +2,12 @@
 
 package restricted.fpe
 
-import net.minecraft.core.particles.ParticleTypes
-import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.effect.MobEffect
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.*
 import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
 import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent
@@ -16,17 +15,15 @@ import net.minecraftforge.registries.DeferredRegister
 import net.minecraftforge.registries.ForgeRegistries
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
-import restricted.fpe.block.FireHydrantBlock
+import restricted.fpe.block.*
+import restricted.fpe.block.entity.FireDetectorBlockEntity
+import restricted.fpe.block.entity.FireSprinklerBlockEntity
 import restricted.fpe.enchant.FireWalkerEnchant
 import restricted.fpe.enchant.SpreadingFireEnchant
-import restricted.fpe.extinguish.ExtinguishContext
-import restricted.fpe.extinguish.ExtinguishRecipe
-import restricted.fpe.extinguish.ExtinguishRecipe.MiniBlockState.Builder.Companion.buildMiniState
-import restricted.fpe.item.FireExtinguisherItem
-import restricted.fpe.item.FireItem
+import restricted.fpe.extinguish.*
+import restricted.fpe.item.*
 import restricted.fpe.potion.SpreadingFireEffect
 import thedarkcolour.kotlinforforge.forge.*
-import kotlin.math.log
 
 const val ModId = "fire_protection_equipment"
 
@@ -38,6 +35,7 @@ object FPE {
 	init {
 		Enchants.registry.register(MOD_BUS)
 		MobEffects.registry.register(MOD_BUS)
+		BlockEntityTypes.registry.register(MOD_BUS)
 		Blocks.registry.register(MOD_BUS)
 		Items.registry.register(MOD_BUS)
 
@@ -46,7 +44,7 @@ object FPE {
 			serverTarget = { MOD_BUS.addListener(::serverSetup) }
 		)
 
-		registerFireRecipes()
+		BuiltInRecipes.register()
 	}
 
 	private fun clientSetup(e: FMLClientSetupEvent) {
@@ -57,29 +55,13 @@ object FPE {
 	private fun serverSetup(e: FMLDedicatedServerSetupEvent) {
 	}
 
-	private fun registerFireRecipes() {
-		logger.info("Registering Fire Recipes")
-
-		ExtinguishRecipe.register(MinecraftBlocks.FIRE.buildMiniState()) { ctx, _, pos ->
-			ctx.world.setBlock(pos, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), buildSetBlockFlag(updateBlock = true, sendToClient = true))
-			ctx.world.addParticle(ParticleTypes.SMOKE, pos.vec3, 0.0, 0.0, 0.0)
-			println("World = ${ctx.world is ServerLevel}")
-			ctx.world.runOnRemote {
-				val v3 = pos.vec3
-				sendParticles(ParticleTypes.CLOUD, v3.x, v3.y, v3.z, (1..20).random(), 0.0, 0.0, 0.0, 0.2)
-			}
-		}
-
-		logger.info("End register")
-		ExtinguishRecipe.recipes.cellSet().forEach { (state, type, func) ->
-			logger.info("$state & $type => $func")
-		}// TODO: Removal
-	}
-
 	object Blocks {
 		internal val registry: DeferredRegister<Block> = DeferredRegister.create(ForgeRegistries.BLOCKS, ModId)
 
 		val FireHydrant by registry.registerObject("fire_hydrant") { FireHydrantBlock }
+		val FireExtinguishingBomb by registry.registerObject("fire_extinguishing_bomb") { FireExtinguishingBombBlock }
+		val FireDetector by registry.registerObject("fire_detector") { FireDetectorBlock }
+		val FireSprinkler by registry.registerObject("fire_sprinkler") { FireSprinklerBlock }
 	}
 
 	object Items {
@@ -90,8 +72,14 @@ object FPE {
 
 		val FireHydrant by registry.registerObject("fire_hydrant") { Blocks.FireHydrant.generateBlockItem() }
 		val BrokenFireHydrant by registry.registerObject("broken_fire_hydrant") { buildItem() }
+		val FireExtinguishingBomb by registry.registerObject("fire_extinguishing_bomb") { Blocks.FireExtinguishingBomb.generateBlockItem() }
+		val FireDetector by registry.registerObject("fire_detector") { Blocks.FireDetector.generateBlockItem() }
+		val FireSprinkler by registry.registerObject("fire_sprinkler") { Blocks.FireSprinkler.generateBlockItem() }
 
 		val FireExtinguisher by registry.registerObject("fire_extinguisher") { FireExtinguisherItem }
+
+		val FurnaceFireProtectionDevice by registry.registerObject("furnace_fire_protection_device") { FurnaceFireProtectionDeviceItem }
+
 	}
 
 	object Tabs {
@@ -115,13 +103,29 @@ object FPE {
 		val SpreadingFire by registry.registerObject("spreading_fire") { SpreadingFireEffect }
 	}
 
+	@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+	object BlockEntityTypes {
+		internal val registry: DeferredRegister<BlockEntityType<*>> = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, ModId)
+
+		val FireDetector: BlockEntityType<FireDetectorBlockEntity> by registry.registerObject("fire_detector") { BlockEntityType.Builder.of(::FireDetectorBlockEntity, Blocks.FireDetector).build(null) }
+		val FireSprinkler: BlockEntityType<FireSprinklerBlockEntity> by registry.registerObject("fire_sprinkler") { BlockEntityType.Builder.of(::FireSprinklerBlockEntity, Blocks.FireSprinkler).build(null) }
+	}
+
 	fun extinguishFire(context: ExtinguishContext) {
+		val extinType = context.type
 		context.boundingBox.forEach {
-			val state = context.world.getBlockState(it)
-			val func = ExtinguishRecipe[state, context.type]
+			val state = context.level.getBlockState(it)
+			val func = ExtinguishRecipe[state, extinType]
 			if(func != null) {
 				func(context, state, it)
-				println("$state & ${context.type.name} = $func") // TODO: Removal
+				logger.debug("Executed the ExtinguishRecipe for $state with type $extinType")
+			}
+		}
+		context.level.getEntitiesOfClass(Entity::class.java, context.boundingBox.AABB) { true }.forEach {
+			val func = ExtinguishRecipe.getForEntity(it.type, extinType)
+			if(func != null) {
+				func(context, it)
+				logger.debug("Executed the Entity ExtinguishRecipe for $it with type $extinType")
 			}
 		}
 	}

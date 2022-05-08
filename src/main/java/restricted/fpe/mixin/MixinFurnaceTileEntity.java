@@ -27,8 +27,9 @@ public abstract class MixinFurnaceTileEntity {
 
 	@Inject(method = "serverTick", at = @At("HEAD"))
 	private static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, AbstractFurnaceBlockEntity pBlockEntity, CallbackInfo ci) {
+		var mixinFurnaceEntity = (MixinFurnaceTileEntity) (Object) pBlockEntity;
 		if(pBlockEntity instanceof FurnaceBlockEntity) {
-			var isLit = ((MixinFurnaceTileEntity)(Object) pBlockEntity).isLit();
+			var isLit = mixinFurnaceEntity.isLit();
 			if(isLit) {
 				if(RANDOM.nextInt(100) > 98) {
 					var blockPosToFire = getAnyBlockPosCanFire(pLevel, pPos);

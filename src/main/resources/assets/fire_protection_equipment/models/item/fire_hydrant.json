@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "fire_protection_equipment:item/fire"
+    "layer0": "fire_protection_equipment:item/fire_hydrant"
   }
 }
