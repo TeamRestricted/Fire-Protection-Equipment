@@ -70,13 +70,16 @@ object FPE {
 		// 模组图标
 		val Fire by registry.registerObject("fire") { FireItem }
 
-		val FireHydrant by registry.registerObject("fire_hydrant") { Blocks.FireHydrant.generateBlockItem() }
 		val BrokenFireHydrant by registry.registerObject("broken_fire_hydrant") { buildItem() }
+
+		// BlockItems
+		val FireHydrant by registry.registerObject("fire_hydrant") { Blocks.FireHydrant.generateBlockItem() }
 		val FireExtinguishingBomb by registry.registerObject("fire_extinguishing_bomb") { Blocks.FireExtinguishingBomb.generateBlockItem() }
 		val FireDetector by registry.registerObject("fire_detector") { Blocks.FireDetector.generateBlockItem() }
 		val FireSprinkler by registry.registerObject("fire_sprinkler") { Blocks.FireSprinkler.generateBlockItem() }
 
 		val FireExtinguisher by registry.registerObject("fire_extinguisher") { FireExtinguisherItem }
+		val HoseNozzle by registry.registerObject("hose_nozzle") { HoseNozzleItem }
 
 		val FurnaceFireProtectionDevice by registry.registerObject("furnace_fire_protection_device") { FurnaceFireProtectionDeviceItem }
 
