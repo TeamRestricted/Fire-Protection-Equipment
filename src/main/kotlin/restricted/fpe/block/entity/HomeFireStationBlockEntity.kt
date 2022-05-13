@@ -21,12 +21,14 @@ class HomeFireStationBlockEntity(pos: BlockPos, state: BlockState) :
 
 	val onFire: Boolean get() = connectedDevices.any { it.onFire }
 
+	@Deprecated("Use AbstractHomeFireDevice#bind(HomeFireStationBlockEntity)")
 	fun bindDevice(entity: AbstractHomeFireDevice<*>) {
 		connectedDevices += entity
 		connectedDevicesPos += entity.blockPos.asLong()
 		entity.boundTo = this
 	}
 
+	@Deprecated("Use AbstractHomeFireDevice#unbind")
 	fun unbindDevice(entity: AbstractHomeFireDevice<*>) {
 		connectedDevices -= entity
 		connectedDevicesPos -= entity.blockPos.asLong()

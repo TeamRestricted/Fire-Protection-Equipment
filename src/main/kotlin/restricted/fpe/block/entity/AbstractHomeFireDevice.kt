@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package restricted.fpe.block.entity
 
 import net.minecraft.core.BlockPos

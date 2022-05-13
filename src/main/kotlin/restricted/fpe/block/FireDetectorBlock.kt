@@ -8,8 +8,7 @@ import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.tags.BlockTags
 import net.minecraft.world.item.context.BlockPlaceContext
-import net.minecraft.world.level.BlockGetter
-import net.minecraft.world.level.Level
+import net.minecraft.world.level.*
 import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.entity.*
 import net.minecraft.world.level.block.state.BlockState
@@ -123,5 +122,9 @@ object FireDetectorBlock : BaseEntityBlock(FPEConst.BlockConst.FireDetectorProp)
 		pBlockEntityType: BlockEntityType<T>
 	): BlockEntityTicker<T>? {
 		return createTickerHelper(pBlockEntityType, FPE.BlockEntityTypes.FireDetector, ::onTick)
+	}
+
+	override fun canSurvive(pState: BlockState, pLevel: LevelReader, pPos: BlockPos): Boolean {
+		return !pLevel.getBlockState(pPos.above()).isAir || !pLevel.getBlockState(pPos.below()).isAir
 	}
 }

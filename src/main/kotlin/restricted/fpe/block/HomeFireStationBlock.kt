@@ -38,7 +38,7 @@ object HomeFireStationBlock : BaseEntityBlock(FPEConst.BlockConst.HomeFireStatio
 				if(b.hasBlockEntity()) {
 					val be = level.getBlockEntity(p)
 					if(be != null && be is AbstractHomeFireDevice<*>) {
-						fireStationEntity.bindDevice(be)
+						be.bind(fireStationEntity)
 					}
 				}
 			}
