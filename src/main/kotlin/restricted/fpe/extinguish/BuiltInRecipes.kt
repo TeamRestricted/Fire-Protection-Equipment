@@ -30,6 +30,7 @@ object BuiltInRecipes {
 				MinecraftBlocks.SOUL_CAMPFIRE.defaultBlockState().setValue(BlockStateProperties.LIT, false)
 			)
 		)
+		ExtinguishRecipe.registerBlock(MinecraftBlocks.NETHER_PORTAL.buildMiniState(), ExtinguishRecipe.directly())
 
 		ExtinguishRecipe.builder(EntityType.BLAZE) {
 			dryIce { ctx, entity ->

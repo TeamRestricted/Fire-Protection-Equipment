@@ -53,4 +53,46 @@ private fun registerLanguages() = FPELanguage.apply {
 		zh("十万火急")
 		tw("十萬火急")
 	}
+
+	advancement("root") {
+		title {
+			en("Burst into Flame")
+			zh("爆燃")
+			tw("爆燃")
+		}
+
+		description {
+			en("Don't play with fire!")
+			zh("不要玩火！")
+			tw("不要玩火！")
+		}
+	}
+
+	advancement("volunteer_fire_fighter") {
+		title {
+			en("Volunteer Firefighter")
+			zh("志愿消防员")
+			tw("消防義工")
+		}
+
+		description {
+			en("Extinguish a Fire")
+			zh("使用灭火器或消防栓熄灭火源")
+			tw("使用滅火器或消防栓熄滅火源")
+		}
+	}
+
+	advancement("breaker") {
+		title {
+			en("Breaker")
+			zh("断路器")
+			tw("斷路器")
+		}
+
+		description {
+			en("Extinguish a Campfire or a Soul Campfire")
+			zh("使用灭火器或消防栓熄灭篝火或灵魂篝火")
+			tw("使用滅火器或消防栓熄滅篝火或靈魂篝火")
+		}
+	}
 }

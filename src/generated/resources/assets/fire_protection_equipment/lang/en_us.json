@@ -1,4 +1,8 @@
 {
+  "advancements.fire_protection_equipment.root.description": "Don't play with fire!",
+  "advancements.fire_protection_equipment.root.title": "Burst into Flame",
+  "advancements.fire_protection_equipment.volunteer_fire_fighter.description": "Extinguish a Fire",
+  "advancements.fire_protection_equipment.volunteer_fire_fighter.title": "Volunteer Firefighter",
   "block.fire_protection_equipment.fire_hydrant": "Fire Hydrant",
   "enchantment.fire_protection_equipment.fire_walker": "Fire Walker",
   "item.fire_protection_equipment.broken_fire_hydrant": "Broken Fire Hydrant",

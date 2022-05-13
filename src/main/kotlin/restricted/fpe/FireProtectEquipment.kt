@@ -2,6 +2,8 @@
 
 package restricted.fpe
 
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.*
@@ -15,10 +17,11 @@ import net.minecraftforge.registries.DeferredRegister
 import net.minecraftforge.registries.ForgeRegistries
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
+import restricted.fpe.advancements.critereon.BlockExtinguishedTrigger
+import restricted.fpe.advancements.critereon.CriteriaUtils
 import restricted.fpe.block.*
 import restricted.fpe.block.entity.*
-import restricted.fpe.enchant.FireWalkerEnchant
-import restricted.fpe.enchant.SpreadingFireEnchant
+import restricted.fpe.enchant.*
 import restricted.fpe.extinguish.*
 import restricted.fpe.item.*
 import restricted.fpe.potion.SpreadingFireEffect
@@ -44,6 +47,7 @@ object FPE {
 		)
 
 		BuiltInRecipes.register()
+		CriteriaUtils.registerCustomTriggers()
 	}
 
 	private fun clientSetup(e: FMLClientSetupEvent) {
@@ -100,6 +104,8 @@ object FPE {
 		val FireWalker by registry.registerObject("fire_walker") { FireWalkerEnchant }
 
 		val SpreadingFire by registry.registerObject("spreading_fire") { SpreadingFireEnchant }
+
+		val HotHead by registry.registerObject("hot_head") { HotHeadEnchant }
 	}
 
 	object MobEffects {
@@ -123,6 +129,11 @@ object FPE {
 			val state = context.level.getBlockState(it)
 			val func = ExtinguishRecipe[state, extinType]
 			if(func != null) {
+				context.level.runOnRemote {
+					if(context.player != null) {
+						BlockExtinguishedTrigger.trigger(context.player as ServerPlayer, context.level as ServerLevel, it, context.itemstack ?: ItemStack.EMPTY)
+					}
+				}
 				func(context, state, it)
 				logger.debug("Executed the ExtinguishRecipe for $state with type $extinType")
 			}
@@ -131,7 +142,7 @@ object FPE {
 			val func = ExtinguishRecipe.getForEntity(it.type, extinType)
 			if(func != null) {
 				func(context, it)
-				logger.debug("Executed the Entity ExtinguishRecipe for $it with type $extinType")
+				// logger.debug("Executed the Entity ExtinguishRecipe for $it with type $extinType")
 			}
 		}
 	}

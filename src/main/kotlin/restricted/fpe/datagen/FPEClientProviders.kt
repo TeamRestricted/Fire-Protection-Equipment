@@ -1,15 +1,11 @@
 package restricted.fpe.datagen
 
 import net.minecraft.data.DataGenerator
-import net.minecraft.world.effect.MobEffect
-import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.Item
-import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.level.block.Block
 import net.minecraftforge.common.data.LanguageProvider
 import restricted.fpe.ModId
-import java.util.function.Supplier
 
 /*
 import net.minecraft.data.DataGenerator
@@ -42,19 +38,19 @@ internal object FPELanguage {
 
 	fun buildEnglish(provider: FPELanguageProvider) {
 		entries.forEach {
-			provider.add(it.key, it.en ?: it.key)
+			provider.add(it.key, it._en ?: it.key)
 		}
 	}
 
 	fun buildChinese(provider: FPELanguageProvider) {
 		entries.forEach {
-			provider.add(it.key, it.zh ?: it.key)
+			provider.add(it.key, it._zh ?: it.key)
 		}
 	}
 
 	fun buildTraditionalChinese(provider: FPELanguageProvider) {
 		entries.forEach {
-			provider.add(it.key, it.zhTw ?: it.key)
+			provider.add(it.key, it._zhTw ?: it.key)
 		}
 	}
 
@@ -74,23 +70,44 @@ internal object FPELanguage {
 		entries += LanguageEntry(enchant.descriptionId).apply(func)
 	}
 
+	fun advancement(advancementId: String, func: AdvancementEntry.() -> Unit) {
+		entries += AdvancementEntry("advancements.$ModId.$advancementId").apply(func).langEntries
+	}
+
 }
 
 internal class LanguageEntry(val key: String) {
 
-	internal var en: String? = null
+	internal var _en: String? = null
 		private set
-	internal var zh: String? = null
+	internal var _zh: String? = null
 		private set
-	internal var zhTw: String? = null
+	internal var _zhTw: String? = null
 		private set
 
-	fun en(english: String) = apply { en = english }
+	fun en(english: String) = apply { _en = english }
 
 	fun zh(chinese: String) = apply {
-		zh = chinese
-		if(zhTw == null) zhTw = chinese
+		_zh = chinese
+		if(_zhTw == null) _zhTw = chinese
 	}
 
-	fun tw(traditionalChinese: String) = apply { zhTw = traditionalChinese }
+	fun tw(traditionalChinese: String) = apply { _zhTw = traditionalChinese }
+}
+
+internal class AdvancementEntry(advancementId: String) {
+
+	private val title = LanguageEntry("$advancementId.title")
+	private val description = LanguageEntry("$advancementId.description")
+
+	fun title(func: LanguageEntry.() -> Unit) {
+		title.apply(func)
+	}
+
+	fun description(func: LanguageEntry.() -> Unit) {
+		description.apply(func)
+	}
+
+	val langEntries: Iterable<LanguageEntry> get() = listOf(title, description)
+
 }

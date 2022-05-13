@@ -1,6 +1,7 @@
 package restricted.fpe
 
 import net.minecraft.core.Direction
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.item.*
 import net.minecraft.world.item.enchantment.EnchantmentCategory
@@ -63,6 +64,11 @@ object FPEConst {
 
 	object EnchantCategory {
 		val BowAndCrossbowCategory: EnchantmentCategory = EnchantmentCategory.create("bow_and_crossbow") { it is BowItem || it is CrossbowItem }
+	}
+
+	object CriteriaNames {
+
+		val BlockExtinguishedTriggerID = ResourceLocation(ModId, "block_extinguished")
 	}
 
 }

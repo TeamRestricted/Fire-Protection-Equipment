@@ -1,0 +1,29 @@
+{
+  "parent": "fire_protection_equipment:root",
+  "display": {
+    "icon": {
+      "item": "fire_protection_equipment:fire_extinguisher"
+    },
+    "title": {
+      "translate": "advancements.fire_protection_equipment.keep_a_cool_head.title"
+    },
+    "description": {
+      "translate": "advancements.fire_protection_equipment.keep_a_cool_head.description"
+    }
+  },
+  "criteria": {
+    "kill_on_fire": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "player": {
+          "flags": {
+            "is_on_fire": true
+          }
+        }
+      }
+    }
+  },
+  "requirements": [
+    ["kill_on_fire"]
+  ]
+}

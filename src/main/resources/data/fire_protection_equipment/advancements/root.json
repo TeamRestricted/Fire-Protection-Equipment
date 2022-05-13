@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "item": "fire_protection_equipment:fire"
+    },
+    "title": {
+      "translate": "advancements.fire_protection_equipment.root.title"
+    },
+    "description": {
+      "translate": "advancements.fire_protection_equipment.root.description"
+    },
+    "background": "fire_protection_equipment:textures/gui/advancements/background.png"
+  },
+  "criteria": {
+    "tick": {
+      "trigger": "minecraft:tick",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    ["tick"]
+  ]
+}
