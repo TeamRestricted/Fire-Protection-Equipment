@@ -30,6 +30,9 @@ object FPEConst {
 		val FireSprinklerProp: BlockProperties =
 			BlockProperties.of(Material.WOOL).strength(0.8F).sound(SoundType.WOOL).noOcclusion().lightLevel { 3 }
 
+		val HomeFireStationProp: BlockProperties =
+			BlockProperties.of(Material.HEAVY_METAL).strength(5.0F, 1200.0F).sound(SoundType.ANVIL).noOcclusion()
+
 		// Property for BlockState
 
 		val VERTICAL_FACING: EnumProperty<Direction> =

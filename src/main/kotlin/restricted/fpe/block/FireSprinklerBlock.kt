@@ -1,12 +1,19 @@
+@file:Suppress("OVERRIDE_DEPRECATION")
+
 package restricted.fpe.block
 
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.BaseEntityBlock
+import net.minecraft.world.level.block.RenderShape
 import net.minecraft.world.level.block.entity.*
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.Vec3
+import net.minecraft.world.phys.shapes.CollisionContext
+import net.minecraft.world.phys.shapes.VoxelShape
 import restricted.fpe.*
 import restricted.fpe.block.entity.FireSprinklerBlockEntity
 import restricted.fpe.extinguish.ExtinguishContext
@@ -62,5 +69,20 @@ object FireSprinklerBlock : BaseEntityBlock(FPEConst.BlockConst.FireSprinklerPro
 				sendParticles(ParticleTypes.SMOKE, pos.vec3.add(0.0, 0.15, 0.0), 5, 0.2)
 			}
 		}
+	}
+
+	override fun getRenderShape(pState: BlockState): RenderShape {
+		return RenderShape.MODEL
+	}
+
+	val shape: VoxelShape = box(5.5, 10.0, 5.5, 10.5, 16.0, 10.5)
+
+	override fun getShape(
+		pState: BlockState,
+		pLevel: BlockGetter,
+		pPos: BlockPos,
+		pContext: CollisionContext
+	): VoxelShape {
+		return shape.getFaceShape(Direction.DOWN)
 	}
 }

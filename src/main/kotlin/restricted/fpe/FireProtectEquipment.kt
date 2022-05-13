@@ -16,8 +16,7 @@ import net.minecraftforge.registries.ForgeRegistries
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import restricted.fpe.block.*
-import restricted.fpe.block.entity.FireDetectorBlockEntity
-import restricted.fpe.block.entity.FireSprinklerBlockEntity
+import restricted.fpe.block.entity.*
 import restricted.fpe.enchant.FireWalkerEnchant
 import restricted.fpe.enchant.SpreadingFireEnchant
 import restricted.fpe.extinguish.*
@@ -62,6 +61,7 @@ object FPE {
 		val FireExtinguishingBomb by registry.registerObject("fire_extinguishing_bomb") { FireExtinguishingBombBlock }
 		val FireDetector by registry.registerObject("fire_detector") { FireDetectorBlock }
 		val FireSprinkler by registry.registerObject("fire_sprinkler") { FireSprinklerBlock }
+		val HomeFireStation by registry.registerObject("home_fire_station") { HomeFireStationBlock }
 	}
 
 	object Items {
@@ -77,9 +77,11 @@ object FPE {
 		val FireExtinguishingBomb by registry.registerObject("fire_extinguishing_bomb") { Blocks.FireExtinguishingBomb.generateBlockItem() }
 		val FireDetector by registry.registerObject("fire_detector") { Blocks.FireDetector.generateBlockItem() }
 		val FireSprinkler by registry.registerObject("fire_sprinkler") { Blocks.FireSprinkler.generateBlockItem() }
+		val HomeFireStation by registry.registerObject("home_fire_station") { Blocks.HomeFireStation.generateBlockItem() }
 
 		val FireExtinguisher by registry.registerObject("fire_extinguisher") { FireExtinguisherItem }
 		val HoseNozzle by registry.registerObject("hose_nozzle") { HoseNozzleItem }
+		val HomeFireTerminal by registry.registerObject("home_fire_terminal") { HomeFireTerminalItem }
 
 		val FurnaceFireProtectionDevice by registry.registerObject("furnace_fire_protection_device") { FurnaceFireProtectionDeviceItem }
 
@@ -112,6 +114,7 @@ object FPE {
 
 		val FireDetector: BlockEntityType<FireDetectorBlockEntity> by registry.registerObject("fire_detector") { BlockEntityType.Builder.of(::FireDetectorBlockEntity, Blocks.FireDetector).build(null) }
 		val FireSprinkler: BlockEntityType<FireSprinklerBlockEntity> by registry.registerObject("fire_sprinkler") { BlockEntityType.Builder.of(::FireSprinklerBlockEntity, Blocks.FireSprinkler).build(null) }
+		val HomeFireStation: BlockEntityType<HomeFireStationBlockEntity> by registry.registerObject("home_fire_station") { BlockEntityType.Builder.of(::HomeFireStationBlockEntity, Blocks.HomeFireStation).build(null) }
 	}
 
 	fun extinguishFire(context: ExtinguishContext) {
