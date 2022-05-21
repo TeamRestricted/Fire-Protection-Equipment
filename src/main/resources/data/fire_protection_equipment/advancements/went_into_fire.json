@@ -1,0 +1,25 @@
+{
+  "parent": "fire_protection_equipment:root",
+  "display": {
+    "icon": {
+      "item": "fire_protection_equipment:fire"
+    },
+    "title": {
+      "translate": "advancements.fire_protection_equipment.went_into_fire.title"
+    },
+    "description": {
+      "translate": "advancements.fire_protection_equipment.went_into_fire.description"
+    },
+    "frame": "challenge",
+    "hidden": true
+  },
+  "criteria": {
+    "ignite": {
+      "trigger": "fire_protection_equipment:player_ignited",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    ["ignite"]
+  ]
+}

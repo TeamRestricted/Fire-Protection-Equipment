@@ -23,10 +23,10 @@ import restricted.fpe.*
 import restricted.fpe.block.entity.AbstractHomeFireDevice
 import restricted.fpe.block.entity.HomeFireStationBlockEntity
 import restricted.fpe.block.entity.IFireProtectBlockEntity.Companion.tickSync
-import restricted.fpe.item.HomeFireTerminalItem
+import restricted.fpe.item.FireAlarmControlTerminalItem
 import java.util.*
 
-object HomeFireStationBlock : BaseEntityBlock(FPEConst.BlockConst.HomeFireStationProp) {
+object FireAlarmControlUnitBlock : BaseEntityBlock(FPEConst.BlockConst.HomeFireStationProp) {
 
 	val uuid: UUID = UUID.fromString("2ea0cb7c-c0e3-4010-ab71-67d2eeca66a9")
 
@@ -61,8 +61,8 @@ object HomeFireStationBlock : BaseEntityBlock(FPEConst.BlockConst.HomeFireStatio
 	): InteractionResult {
 		level.runOnRemote {
 			val stack = player.getItemInHand(hand)
-			if(stack.item == FPE.Items.HomeFireTerminal) { // 绑定
-				HomeFireTerminalItem.bindTo(stack, level, pos)
+			if(stack.item == FPE.Items.FireAlarmControlTerminal) { // 绑定
+				FireAlarmControlTerminalItem.bindTo(stack, level, pos)
 			} else { // 查询
 				level.getBlockEntity(pos, FPE.BlockEntityTypes.HomeFireStation).ifPresent { fireStationEntity ->
 					if(fireStationEntity.connectedDevices.isNotEmpty()) {

@@ -65,7 +65,7 @@ object FPE {
 		val FireExtinguishingBomb by registry.registerObject("fire_extinguishing_bomb") { FireExtinguishingBombBlock }
 		val FireDetector by registry.registerObject("fire_detector") { FireDetectorBlock }
 		val FireSprinkler by registry.registerObject("fire_sprinkler") { FireSprinklerBlock }
-		val HomeFireStation by registry.registerObject("home_fire_station") { HomeFireStationBlock }
+		val FireAlarmControlUnit by registry.registerObject("fire_alarm_control_unit") { FireAlarmControlUnitBlock }
 	}
 
 	object Items {
@@ -81,11 +81,11 @@ object FPE {
 		val FireExtinguishingBomb by registry.registerObject("fire_extinguishing_bomb") { Blocks.FireExtinguishingBomb.generateBlockItem() }
 		val FireDetector by registry.registerObject("fire_detector") { Blocks.FireDetector.generateBlockItem() }
 		val FireSprinkler by registry.registerObject("fire_sprinkler") { Blocks.FireSprinkler.generateBlockItem() }
-		val HomeFireStation by registry.registerObject("home_fire_station") { Blocks.HomeFireStation.generateBlockItem() }
+		val FireAlarmControlUnit by registry.registerObject("home_fire_station") { Blocks.FireAlarmControlUnit.generateBlockItem() }
 
 		val FireExtinguisher by registry.registerObject("fire_extinguisher") { FireExtinguisherItem }
 		val HoseNozzle by registry.registerObject("hose_nozzle") { HoseNozzleItem }
-		val HomeFireTerminal by registry.registerObject("home_fire_terminal") { HomeFireTerminalItem }
+		val FireAlarmControlTerminal by registry.registerObject("fire_alarm_control_terminal") { FireAlarmControlTerminalItem }
 
 		val FurnaceFireProtectionDevice by registry.registerObject("furnace_fire_protection_device") { FurnaceFireProtectionDeviceItem }
 
@@ -101,11 +101,10 @@ object FPE {
 		internal val registry: DeferredRegister<Enchantment> =
 			DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, ModId)
 
-		val FireWalker by registry.registerObject("fire_walker") { FireWalkerEnchant }
-
-		val SpreadingFire by registry.registerObject("spreading_fire") { SpreadingFireEnchant }
-
-		val HotHead by registry.registerObject("hot_head") { HotHeadEnchant }
+		val FireHaste by registry.registerObject("fire_haste") { FireHasteEnchant }
+		val Blaze by registry.registerObject("blaze") { BlazeEnchant }
+		val Hothead by registry.registerObject("hothead") { HotheadEnchant }
+		val HallowfireHeart by registry.registerObject("hallowfire_heart") { HallowfireHeartEnchant }
 	}
 
 	object MobEffects {
@@ -120,7 +119,7 @@ object FPE {
 
 		val FireDetector: BlockEntityType<FireDetectorBlockEntity> by registry.registerObject("fire_detector") { BlockEntityType.Builder.of(::FireDetectorBlockEntity, Blocks.FireDetector).build(null) }
 		val FireSprinkler: BlockEntityType<FireSprinklerBlockEntity> by registry.registerObject("fire_sprinkler") { BlockEntityType.Builder.of(::FireSprinklerBlockEntity, Blocks.FireSprinkler).build(null) }
-		val HomeFireStation: BlockEntityType<HomeFireStationBlockEntity> by registry.registerObject("home_fire_station") { BlockEntityType.Builder.of(::HomeFireStationBlockEntity, Blocks.HomeFireStation).build(null) }
+		val HomeFireStation: BlockEntityType<HomeFireStationBlockEntity> by registry.registerObject("home_fire_station") { BlockEntityType.Builder.of(::HomeFireStationBlockEntity, Blocks.FireAlarmControlUnit).build(null) }
 	}
 
 	fun extinguishFire(context: ExtinguishContext) {

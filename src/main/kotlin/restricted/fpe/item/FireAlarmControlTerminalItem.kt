@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import restricted.fpe.*
 
-object HomeFireTerminalItem : Item(FPEConst.ItemConst.DefaultNonStackableItemProp) {
+object FireAlarmControlTerminalItem : Item(FPEConst.ItemConst.DefaultNonStackableItemProp) {
 
 	const val TAG_FIRE_STATION_POS = "binding_position"
 	const val TAG_STATUS = "status"

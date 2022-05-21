@@ -7,24 +7,6 @@ import net.minecraft.world.level.block.Block
 import net.minecraftforge.common.data.LanguageProvider
 import restricted.fpe.ModId
 
-/*
-import net.minecraft.data.DataGenerator
-import net.minecraftforge.client.model.generators.BlockStateProvider
-import net.minecraftforge.client.model.generators.ItemModelProvider
-import net.minecraftforge.common.data.ExistingFileHelper
-import restricted.fpe.ModId
-
-internal class SFBlockStateProvider(val g: DataGenerator, private val h: ExistingFileHelper) : BlockStateProvider(g, ModId, h) {
-	override fun registerStatesAndModels() {
-	}
-}
-
-internal class SFItemModelProvider(g: DataGenerator, h: ExistingFileHelper) : ItemModelProvider(g, ModId, h) {
-	override fun registerModels() {
-	}
-}
-*/
-
 internal class FPELanguageProvider(dataGen: DataGenerator, language: String, val block: (FPELanguageProvider) -> Unit) :
 	LanguageProvider(dataGen, ModId, language) {
 	override fun addTranslations() {
@@ -38,19 +20,19 @@ internal object FPELanguage {
 
 	fun buildEnglish(provider: FPELanguageProvider) {
 		entries.forEach {
-			provider.add(it.key, it._en ?: it.key)
+			provider.add(it.key, it.langEnglish ?: it.key)
 		}
 	}
 
 	fun buildChinese(provider: FPELanguageProvider) {
 		entries.forEach {
-			provider.add(it.key, it._zh ?: it.key)
+			provider.add(it.key, it.langChinese ?: it.key)
 		}
 	}
 
 	fun buildTraditionalChinese(provider: FPELanguageProvider) {
 		entries.forEach {
-			provider.add(it.key, it._zhTw ?: it.key)
+			provider.add(it.key, it.langChineseTradition ?: it.key)
 		}
 	}
 
@@ -78,21 +60,21 @@ internal object FPELanguage {
 
 internal class LanguageEntry(val key: String) {
 
-	internal var _en: String? = null
+	internal var langEnglish: String? = null
 		private set
-	internal var _zh: String? = null
+	internal var langChinese: String? = null
 		private set
-	internal var _zhTw: String? = null
+	internal var langChineseTradition: String? = null
 		private set
 
-	fun en(english: String) = apply { _en = english }
+	fun en(english: String) = apply { this.langEnglish = english }
 
 	fun zh(chinese: String) = apply {
-		_zh = chinese
-		if(_zhTw == null) _zhTw = chinese
+		langChinese = chinese
+		if(langChineseTradition == null) langChineseTradition = chinese
 	}
 
-	fun tw(traditionalChinese: String) = apply { _zhTw = traditionalChinese }
+	fun tw(traditionalChinese: String) = apply { langChineseTradition = traditionalChinese }
 }
 
 internal class AdvancementEntry(advancementId: String) {

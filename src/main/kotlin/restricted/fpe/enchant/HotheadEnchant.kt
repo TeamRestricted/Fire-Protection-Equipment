@@ -4,7 +4,7 @@ import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.MobType
 import net.minecraft.world.item.enchantment.*
 
-object HotHeadEnchant : Enchantment(Rarity.COMMON, EnchantmentCategory.ARMOR_HEAD, arrayOf(EquipmentSlot.HEAD)) {
+object HotheadEnchant : Enchantment(Rarity.COMMON, EnchantmentCategory.ARMOR_HEAD, arrayOf(EquipmentSlot.HEAD)) {
 
 	override fun checkCompatibility(pOther: Enchantment): Boolean {
 		if(pOther == Enchantments.RESPIRATION) return false

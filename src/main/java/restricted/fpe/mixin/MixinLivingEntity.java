@@ -28,7 +28,7 @@ public abstract class MixinLivingEntity extends Entity {
 	// 如果是火就修改数值；speed = 1 + level * factor(default=0.2) // TODO: 添加速度因数配置
 	@Inject(method = "getBlockSpeedFactor()F", at = @At("RETURN"), cancellable = true)
 	private void getBlockSpeedFactor(CallbackInfoReturnable<Float> cir) {
-		var enchantLevel = EnchantmentHelper.getEnchantmentLevel(FPE.Enchants.INSTANCE.getFireWalker(), (LivingEntity) (Object) this);
+		var enchantLevel = EnchantmentHelper.getEnchantmentLevel(FPE.Enchants.INSTANCE.getFireHaste(), (LivingEntity) (Object) this);
 		if(inFireBlock() && enchantLevel > 0) {
 			cir.setReturnValue(1.0F + enchantLevel * 0.2F);
 		}

@@ -25,6 +25,7 @@ object CriteriaUtils {
 
 	fun registerCustomTriggers() {
 		CriteriaTriggers.register(BlockExtinguishedTrigger)
+		CriteriaTriggers.register(PlayerIgnitedTrigger)
 	}
 
 }

@@ -5,10 +5,10 @@
       "item": "fire_protection_equipment:fire_extinguisher"
     },
     "title": {
-      "translate": "advancements.fire_protection_equipment.breaker.title"
+      "translate": "advancements.fire_protection_equipment.campsite_safety_regulations.title"
     },
     "description": {
-      "translate": "advancements.fire_protection_equipment.breaker.description"
+      "translate": "advancements.fire_protection_equipment.campsite_safety_regulations.description"
     }
   },
   "criteria": {

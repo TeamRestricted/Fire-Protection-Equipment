@@ -69,6 +69,7 @@ object FPEConst {
 	object CriteriaNames {
 
 		val BlockExtinguishedTriggerID = ResourceLocation(ModId, "block_extinguished")
+		val PlayerIgnitedTriggerID = ResourceLocation(ModId, "player_ignited")
 	}
 
 }

@@ -5,10 +5,10 @@
       "item": "fire_protection_equipment:fire_extinguisher"
     },
     "title": {
-      "translate": "advancements.fire_protection_equipment.keep_a_cool_head.title"
+      "translate": "advancements.fire_protection_equipment.cold_blooded.title"
     },
     "description": {
-      "translate": "advancements.fire_protection_equipment.keep_a_cool_head.description"
+      "translate": "advancements.fire_protection_equipment.cold_blooded.description"
     }
   },
   "criteria": {
