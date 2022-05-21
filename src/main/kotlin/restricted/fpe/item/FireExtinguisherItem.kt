@@ -88,7 +88,7 @@ object FireExtinguisherItem : Item(FPEConst.ItemConst.FireExtinguisherProp) {
 	}
 
 	override fun getDescriptionId(itemstack: ItemStack): String {
-		return "${descriptionId}.${itemstack.extinguisherTag.extinguisherType.name.lowercase()}"
+		return "${descriptionId}.${itemstack.extinguisherTag.extinguisherType.value.lowercase()}"
 	}
 
 	override fun getUseDuration(pStack: ItemStack): Int {

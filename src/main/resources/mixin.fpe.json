@@ -4,6 +4,9 @@
   "package": "restricted.fpe.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "MixinFireworkRocketEntity",
+    "MixinFireworkStarItem",
+    "MixinFireworkStarRecipe",
     "MixinFurnaceTileEntity",
     "MixinLivingEntity"
   ],

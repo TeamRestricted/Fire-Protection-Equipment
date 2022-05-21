@@ -127,6 +127,12 @@ private fun registerLanguages() = FPELanguage.apply {
 		tw("熔爐防火設備")
 	}
 
+	item(FPE.Items.DryChemicalPowder) {
+		en("Monoammonium Phosphate Powder")
+		zh("磷酸二氢铵粉末")
+		tw("磷酸二氫銨粉末")
+	}
+
 	enchant(FPE.Enchants.FireHaste) {
 		en("Fire Walker")
 		zh("十万火急")
@@ -219,5 +225,49 @@ private fun registerLanguages() = FPELanguage.apply {
 			zh("不要燃着进木屋啦！")
 			tw("不要燃著進木屋！")
 		}
+	}
+
+	advancement("pinpointed") {
+		title {
+			en("Pinpointed")
+			zh("消防水枪")
+			tw("消防水槍")
+		}
+
+		description {
+			en("Extinguish fire with Extinguishing Star")
+			zh("使用灭火之星熄灭火焰")
+			tw("使用滅火之星熄滅火焰")
+		}
+	}
+
+	add("item.fire_protection_equipment.firework_star") {
+		en("Extinguish Star")
+		zh("灭火之星")
+		tw("滅火之星")
+	}
+
+	add("fire_protection_equipment.extinguish.dry_chemical") {
+		en("Dry Chemical")
+		zh("干粉")
+		tw("乾粉")
+	}
+
+	add("fire_protection_equipment.extinguish.foams") {
+		en("Foams")
+		zh("泡沫")
+		tw("泡沫")
+	}
+
+	add("fire_protection_equipment.extinguish.water") {
+		en("Water")
+		zh("水")
+		tw("水")
+	}
+
+	add("fire_protection_equipment.extinguish.dry_ice") {
+		en("Dry Ice")
+		zh("干冰")
+		tw("二氧化碳")
 	}
 }

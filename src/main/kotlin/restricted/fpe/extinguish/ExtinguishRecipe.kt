@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.state.properties.Property
 import restricted.fpe.*
 import restricted.fpe.extinguish.ExtinguishRecipe.MiniBlockState.Builder.Companion.buildMiniState
 import restricted.fpe.item.FireExtinguisherItem
+import restricted.fpe.util.FireworkHelper
 import thedarkcolour.kotlinforforge.kotlin.enumMapOf
 import kotlin.collections.component1
 import kotlin.collections.component2
@@ -108,10 +109,13 @@ object ExtinguishRecipe {
 
 	//////// FAST FUNCTIONS
 
-	private val DIRECTLY_EXTINGUISH: ExtinguishBlockFunction = { ctx, _, pos ->
-		val canExtinguish = (ctx.itemstack == null) || (ctx.itemstack.item == FPE.Items.FireExtinguisher && FireExtinguisherItem.canExtinguishFire(ctx, pos))
+	private fun canDefaultExtinguish(ctx: ExtinguishContext): Boolean =
+		(ctx.itemstack == null) ||
+				(ctx.itemstack.item == FPE.Items.FireExtinguisher && FireExtinguisherItem.canExtinguishFire(ctx, ctx.centerPos)) ||
+				(ctx.itemstack.item == MinecraftItems.FIREWORK_ROCKET && FireworkHelper.hasExtinguishingStar(ctx.itemstack))
 
-		if(canExtinguish) {
+	private val DIRECTLY_EXTINGUISH: ExtinguishBlockFunction = { ctx, _, pos ->
+		if(canDefaultExtinguish(ctx)) {
 			ctx.level.removeBlock(pos, false)
 		}
 		ctx.level.runOnRemote {
@@ -122,9 +126,7 @@ object ExtinguishRecipe {
 	fun directly(): ExtinguishBlockFunction = DIRECTLY_EXTINGUISH
 
 	fun replaceWithBlock(newState: BlockState): ExtinguishBlockFunction = { ctx, _, pos ->
-		val canExtinguish = (ctx.itemstack == null) || (ctx.itemstack.item == FPE.Items.FireExtinguisher && FireExtinguisherItem.canExtinguishFire(ctx, pos))
-
-		if(canExtinguish) {
+		if(canDefaultExtinguish(ctx)) {
 			ctx.level.setBlockAndUpdate(pos, newState)
 		}
 		ctx.level.runOnRemote {

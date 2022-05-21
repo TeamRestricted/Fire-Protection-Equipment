@@ -1,0 +1,30 @@
+{
+  "parent": "fire_protection_equipment:volunteer_fire_fighter",
+  "display": {
+    "icon": {
+      "item": "minecraft:firework_rocket"
+    },
+    "title": {
+      "translate": "advancements.fire_protection_equipment.pinpointed.title"
+    },
+    "description": {
+      "translate": "advancements.fire_protection_equipment.pinpointed.description"
+    }
+  },
+  "criteria": {
+    "shoot_firework": {
+      "trigger": "fire_protection_equipment:block_extinguished",
+      "conditions": {
+        "block": {
+          "tag": "fire"
+        },
+        "item": {
+          "items": ["minecraft:firework_rocket"]
+        }
+      }
+    }
+  },
+  "requirements": [
+    ["shoot_firework"]
+  ]
+}

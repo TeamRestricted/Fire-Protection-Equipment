@@ -8,7 +8,21 @@ enum class ExtinguishType {
 
 	NONE;
 
+	val value: String get() = name.lowercase()
+
 	companion object {
 		val ALL = arrayOf(DRY_CHEMICAL, FOAMS, WATER, DRY_ICE)
+
+		@JvmStatic
+		@JvmName("fromString")
+		fun valueOf(str: String): ExtinguishType? {
+			return when(str) {
+				"dry_chemical" -> DRY_CHEMICAL
+				"foams" -> FOAMS
+				"water" -> WATER
+				"dry_ice" -> DRY_ICE
+				else -> null
+			}
+		}
 	}
 }

@@ -89,6 +89,7 @@ object FPE {
 
 		val FurnaceFireProtectionDevice by registry.registerObject("furnace_fire_protection_device") { FurnaceFireProtectionDeviceItem }
 
+		val DryChemicalPowder by registry.registerObject("dry_chemical_powder") { buildItem() }
 	}
 
 	object Tabs {
@@ -122,6 +123,7 @@ object FPE {
 		val HomeFireStation: BlockEntityType<HomeFireStationBlockEntity> by registry.registerObject("home_fire_station") { BlockEntityType.Builder.of(::HomeFireStationBlockEntity, Blocks.FireAlarmControlUnit).build(null) }
 	}
 
+	@JvmStatic
 	fun extinguishFire(context: ExtinguishContext) {
 		val extinType = context.type
 		context.boundingBox.forEach {
