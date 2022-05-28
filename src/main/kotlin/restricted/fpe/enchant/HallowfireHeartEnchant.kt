@@ -23,6 +23,13 @@ object HallowfireHeartEnchant : Enchantment(Rarity.VERY_RARE, EnchantmentCategor
 		return 1
 	}
 
+	override fun checkCompatibility(pOther: Enchantment): Boolean {
+		if(pOther == Enchantments.MENDING) return false
+		if(pOther == Enchantments.UNBREAKING) return false
+		if(pOther == Enchantments.FIRE_PROTECTION) return false
+		return true
+	}
+
 	fun tryRepair(player: Player) {
 		val stack = EnchantmentHelper.getRandomItemWith(FPE.Enchants.HallowfireHeart, player)?.value
 		if(stack != null) {

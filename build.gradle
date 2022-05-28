@@ -18,10 +18,14 @@ buildscript {
     }
 }
 
+System.setProperty("net.minecraftforge.gradle.check.certs", "false")
+
 apply plugin: "net.minecraftforge.gradle"
 apply plugin: "org.parchmentmc.librarian.forgegradle"
 apply plugin: "kotlin"
-apply from: 'https://raw.githubusercontent.com/thedarkcolour/KotlinForForge/site/thedarkcolour/kotlinforforge/gradle/kff-3.3.2.gradle'
+// 天天连不上，直接放本地拉倒了。
+// apply from: 'https://raw.githubusercontent.com/thedarkcolour/KotlinForForge/site/thedarkcolour/kotlinforforge/gradle/kff-3.3.2.gradle'
+apply from: './kff-3.3.2.gradle'
 apply plugin: "org.spongepowered.mixin"
 
 def modId = "fire_protection_equipment"
@@ -69,6 +73,7 @@ repositories {
     maven { url = "https://files.minecraftforge.net/maven" }
     maven { url = "https://maven.parchmentmc.org" }
     maven { url "https://cursemaven.com"; content {includeGroup("curse.maven")  } }
+    maven { url = "https://maven.blamejared.com" }
 }
 
 dependencies {
@@ -78,6 +83,9 @@ dependencies {
 
     implementation fg.deobf("curse.maven:jade-324717:3761542")
     implementation fg.deobf("curse.maven:neat-238372:3593906")
+
+    compileOnly("com.blamejared.crafttweaker:CraftTweaker-forge-1.18.2:${project.ctVersion}")
+    runtimeOnly(fg.deobf("com.blamejared.crafttweaker:CraftTweaker-forge-1.18.2:${project.ctVersion}"))
 }
 
 jar {

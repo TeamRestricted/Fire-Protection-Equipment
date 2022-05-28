@@ -9,6 +9,7 @@ import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.item.enchantment.EnchantmentHelper
 import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.BlockGetter
+import net.minecraft.world.level.LevelReader
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.HorizontalDirectionalBlock
 import net.minecraft.world.level.block.state.BlockState
@@ -50,5 +51,9 @@ object FireHydrantBlock : HorizontalDirectionalBlock(FPEConst.BlockConst.FireHyd
 		} else {
 			mutableListOf(FPE.Items.BrokenFireHydrant.defaultInstance)
 		}
+	}
+
+	override fun canSurvive(pState: BlockState, pLevel: LevelReader, pPos: BlockPos): Boolean {
+		return pLevel.getBlockState(pPos.below()).isAir
 	}
 }

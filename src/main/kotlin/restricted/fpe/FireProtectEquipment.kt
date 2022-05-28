@@ -2,17 +2,24 @@
 
 package restricted.fpe
 
+import net.minecraft.data.worldgen.features.FeatureUtils
+import net.minecraft.data.worldgen.placement.PlacementUtils
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.util.random.SimpleWeightedRandomList
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.*
 import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntityType
+import net.minecraft.world.level.levelgen.feature.Feature
+import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration
+import net.minecraft.world.level.levelgen.feature.stateproviders.WeightedStateProvider
+import net.minecraft.world.level.levelgen.placement.RarityFilter
 import net.minecraftforge.fml.common.Mod
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
-import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent
+import net.minecraftforge.fml.event.lifecycle.*
 import net.minecraftforge.registries.DeferredRegister
 import net.minecraftforge.registries.ForgeRegistries
 import org.apache.logging.log4j.LogManager
@@ -46,6 +53,10 @@ object FPE {
 			serverTarget = { MOD_BUS.addListener(::serverSetup) }
 		)
 
+		MOD_BUS.addListener<FMLCommonSetupEvent> {
+			// registerFeatures()
+		}
+
 		BuiltInRecipes.register()
 		CriteriaUtils.registerCustomTriggers()
 	}
@@ -56,6 +67,31 @@ object FPE {
 	}
 
 	private fun serverSetup(e: FMLDedicatedServerSetupEvent) {
+		e.enqueueWork {
+		}
+	}
+
+	private fun registerFeatures() {
+		FPEConst.Features.NaturalFireHydrant =
+			FeatureUtils.register(
+				"$ModId:fire_hydrant", Feature.FLOWER, FeatureUtils.simpleRandomPatchConfiguration(
+					64,
+					PlacementUtils.onlyWhenEmpty(
+						Feature.SIMPLE_BLOCK,
+						SimpleBlockConfiguration(WeightedStateProvider(SimpleWeightedRandomList.single(Blocks.FireHydrant.defaultBlockState())))
+					)
+				)
+			)
+
+		FPEConst.Placements.NaturalFireHydrant =
+			PlacementUtils.register(
+				"$ModId:fire_hydrant",
+				FPEConst.Features.NaturalFireHydrant,
+				listOf(
+					RarityFilter.onAverageOnceEvery(1),
+					PlacementUtils.HEIGHTMAP
+				)
+			)
 	}
 
 	object Blocks {
@@ -81,15 +117,46 @@ object FPE {
 		val FireExtinguishingBomb by registry.registerObject("fire_extinguishing_bomb") { Blocks.FireExtinguishingBomb.generateBlockItem() }
 		val FireDetector by registry.registerObject("fire_detector") { Blocks.FireDetector.generateBlockItem() }
 		val FireSprinkler by registry.registerObject("fire_sprinkler") { Blocks.FireSprinkler.generateBlockItem() }
-		val FireAlarmControlUnit by registry.registerObject("home_fire_station") { Blocks.FireAlarmControlUnit.generateBlockItem() }
+		val FireAlarmControlUnit by registry.registerObject("fire_alarm_control_unit") { Blocks.FireAlarmControlUnit.generateBlockItem() }
 
 		val FireExtinguisher by registry.registerObject("fire_extinguisher") { FireExtinguisherItem }
 		val HoseNozzle by registry.registerObject("hose_nozzle") { HoseNozzleItem }
 		val FireAlarmControlTerminal by registry.registerObject("fire_alarm_control_terminal") { FireAlarmControlTerminalItem }
+		val HandCrankSiren by registry.registerObject("hand_crank_siren") { HandCrankSirenItem }
 
 		val FurnaceFireProtectionDevice by registry.registerObject("furnace_fire_protection_device") { FurnaceFireProtectionDeviceItem }
 
 		val DryChemicalPowder by registry.registerObject("dry_chemical_powder") { buildItem() }
+
+		// suit
+		val FirefightersHelmet by registry.registerObject("firefighters_helmet") {
+			ArmorItem(
+				FPEConst.FirefighterSuitMaterials,
+				EquipmentSlot.HEAD,
+				FPEConst.ItemConst.DefaultNonStackableItemProp
+			)
+		}
+		val FirefightersChestplate by registry.registerObject("firefighters_chestplate") {
+			ArmorItem(
+				FPEConst.FirefighterSuitMaterials,
+				EquipmentSlot.CHEST,
+				FPEConst.ItemConst.DefaultNonStackableItemProp
+			)
+		}
+		val FirefightersLeggings by registry.registerObject("firefighters_leggings") {
+			ArmorItem(
+				FPEConst.FirefighterSuitMaterials,
+				EquipmentSlot.LEGS,
+				FPEConst.ItemConst.DefaultNonStackableItemProp
+			)
+		}
+		val FirefightersBoots by registry.registerObject("firefighters_boots") {
+			ArmorItem(
+				FPEConst.FirefighterSuitMaterials,
+				EquipmentSlot.FEET,
+				FPEConst.ItemConst.DefaultNonStackableItemProp
+			)
+		}
 	}
 
 	object Tabs {
@@ -116,11 +183,27 @@ object FPE {
 
 	@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 	object BlockEntityTypes {
-		internal val registry: DeferredRegister<BlockEntityType<*>> = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, ModId)
+		internal val registry: DeferredRegister<BlockEntityType<*>> =
+			DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, ModId)
 
-		val FireDetector: BlockEntityType<FireDetectorBlockEntity> by registry.registerObject("fire_detector") { BlockEntityType.Builder.of(::FireDetectorBlockEntity, Blocks.FireDetector).build(null) }
-		val FireSprinkler: BlockEntityType<FireSprinklerBlockEntity> by registry.registerObject("fire_sprinkler") { BlockEntityType.Builder.of(::FireSprinklerBlockEntity, Blocks.FireSprinkler).build(null) }
-		val HomeFireStation: BlockEntityType<HomeFireStationBlockEntity> by registry.registerObject("home_fire_station") { BlockEntityType.Builder.of(::HomeFireStationBlockEntity, Blocks.FireAlarmControlUnit).build(null) }
+		val FireDetector: BlockEntityType<FireDetectorBlockEntity> by registry.registerObject("fire_detector") {
+			BlockEntityType.Builder.of(
+				::FireDetectorBlockEntity,
+				Blocks.FireDetector
+			).build(null)
+		}
+		val FireSprinkler: BlockEntityType<FireSprinklerBlockEntity> by registry.registerObject("fire_sprinkler") {
+			BlockEntityType.Builder.of(
+				::FireSprinklerBlockEntity,
+				Blocks.FireSprinkler
+			).build(null)
+		}
+		val HomeFireStation: BlockEntityType<HomeFireStationBlockEntity> by registry.registerObject("home_fire_station") {
+			BlockEntityType.Builder.of(
+				::HomeFireStationBlockEntity,
+				Blocks.FireAlarmControlUnit
+			).build(null)
+		}
 	}
 
 	@JvmStatic
@@ -132,7 +215,12 @@ object FPE {
 			if(func != null) {
 				context.level.runOnRemote {
 					if(context.player != null) {
-						BlockExtinguishedTrigger.trigger(context.player as ServerPlayer, context.level as ServerLevel, it, context.itemstack ?: ItemStack.EMPTY)
+						BlockExtinguishedTrigger.trigger(
+							context.player as ServerPlayer,
+							context.level as ServerLevel,
+							it,
+							context.itemstack ?: ItemStack.EMPTY
+						)
 					}
 				}
 				func(context, state, it)

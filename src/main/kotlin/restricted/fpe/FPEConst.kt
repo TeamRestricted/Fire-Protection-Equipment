@@ -1,13 +1,22 @@
 package restricted.fpe
 
 import net.minecraft.core.Direction
+import net.minecraft.core.Holder
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.util.Mth
 import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.*
+import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.item.enchantment.EnchantmentCategory
 import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.block.state.properties.EnumProperty
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature
+import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration
+import net.minecraft.world.level.levelgen.placement.PlacedFeature
 import net.minecraft.world.level.material.Material
 
 private typealias ItemProperties = Item.Properties
@@ -70,6 +79,48 @@ object FPEConst {
 
 		val BlockExtinguishedTriggerID = ResourceLocation(ModId, "block_extinguished")
 		val PlayerIgnitedTriggerID = ResourceLocation(ModId, "player_ignited")
+	}
+
+	val FirefighterSuitMaterials = object : ArmorMaterial {
+		override fun getDurabilityForSlot(pSlot: EquipmentSlot): Int {
+			return Mth.floor(ArmorMaterials.IRON.getDurabilityForSlot(pSlot) * 1.5)
+		}
+
+		override fun getDefenseForSlot(pSlot: EquipmentSlot): Int {
+			return ArmorMaterials.IRON.getDefenseForSlot(pSlot)
+		}
+
+		override fun getEnchantmentValue(): Int {
+			return ArmorMaterials.GOLD.enchantmentValue
+		}
+
+		override fun getEquipSound(): SoundEvent {
+			return SoundEvents.WOOL_PLACE
+		}
+
+		override fun getRepairIngredient(): Ingredient {
+			return Ingredient.of(MinecraftItems.WHITE_WOOL)
+		}
+
+		override fun getName(): String {
+			return "$ModId:firefighter"
+		}
+
+		override fun getToughness(): Float {
+			return ArmorMaterials.DIAMOND.toughness
+		}
+
+		override fun getKnockbackResistance(): Float {
+			return ArmorMaterials.IRON.knockbackResistance
+		}
+	}
+
+	object Features {
+		lateinit var NaturalFireHydrant: Holder<ConfiguredFeature<RandomPatchConfiguration, *>>
+	}
+
+	object Placements {
+		lateinit var NaturalFireHydrant: Holder<PlacedFeature>
 	}
 
 }

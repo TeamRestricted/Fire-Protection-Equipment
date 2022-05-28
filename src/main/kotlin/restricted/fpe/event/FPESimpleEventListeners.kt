@@ -14,6 +14,7 @@ import net.minecraftforge.event.TickEvent
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import net.minecraftforge.event.entity.living.LivingHurtEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
+import net.minecraftforge.event.world.BiomeLoadingEvent
 import net.minecraftforge.event.world.BlockEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.common.Mod
@@ -85,4 +86,9 @@ fun onPlayerTick(e: TickEvent.PlayerTickEvent) {
 	if(e.player.isOnFire) {
 		HallowfireHeartEnchant.tryRepair(e.player)
 	}
+}
+
+@SubscribeEvent
+fun onBiomeLoading(e: BiomeLoadingEvent) {
+	// e.generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, FPEConst.Placements.NaturalFireHydrant)
 }
