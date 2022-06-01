@@ -8,8 +8,10 @@ import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ShovelItem
 import net.minecraft.world.item.enchantment.EnchantmentHelper
+import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.block.CampfireBlock
 import net.minecraft.world.level.block.FireBlock
+import net.minecraft.world.level.levelgen.GenerationStep
 import net.minecraftforge.event.TickEvent
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import net.minecraftforge.event.entity.living.LivingHurtEvent
@@ -90,5 +92,9 @@ fun onPlayerTick(e: TickEvent.PlayerTickEvent) {
 
 @SubscribeEvent
 fun onBiomeLoading(e: BiomeLoadingEvent) {
-	// e.generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, FPEConst.Placements.NaturalFireHydrant)
+    if (e.category == Biome.BiomeCategory.NETHER || e.category == Biome.BiomeCategory.THEEND)
+        return
+    e.generation.getFeatures(GenerationStep.Decoration.TOP_LAYER_MODIFICATION)
+        .add(FPEConst.Placements.NaturalFireHydrant)
+    // e.generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, FPEConst.Placements.NaturalFireHydrant)
 }
