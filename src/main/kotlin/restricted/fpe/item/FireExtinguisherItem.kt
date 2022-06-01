@@ -69,7 +69,7 @@ object FireExtinguisherItem : Item(FPEConst.ItemConst.FireExtinguisherProp) {
 
 	private fun getExtinguisherLevel(world: Level, stack: ItemStack): Int {
 		val type = getExtinguisherType(stack)
-		if(type == ExtinguishType.FOAMS && world.dimensionType() == DimensionType.DEFAULT_NETHER) {
+		if(type == ExtinguishType.FOAMS && world.dimension() == Level.NETHER) {
 			return 0
 		}
 		return stack.extinguisherTag.extinguishingLevel
