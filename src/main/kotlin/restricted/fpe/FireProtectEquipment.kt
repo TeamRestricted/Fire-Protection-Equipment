@@ -6,20 +6,27 @@ import net.minecraft.data.worldgen.features.FeatureUtils
 import net.minecraft.data.worldgen.placement.PlacementUtils
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.util.random.SimpleWeightedRandomList
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.item.*
+import net.minecraft.world.item.ArmorItem
+import net.minecraft.world.item.CreativeModeTab
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.levelgen.feature.Feature
+import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration
-import net.minecraft.world.level.levelgen.feature.stateproviders.WeightedStateProvider
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider
+import net.minecraft.world.level.levelgen.placement.BiomeFilter
+import net.minecraft.world.level.levelgen.placement.InSquarePlacement
 import net.minecraft.world.level.levelgen.placement.RarityFilter
 import net.minecraftforge.fml.common.Mod
-import net.minecraftforge.fml.event.lifecycle.*
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
+import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent
 import net.minecraftforge.registries.DeferredRegister
 import net.minecraftforge.registries.ForgeRegistries
 import org.apache.logging.log4j.LogManager
@@ -27,12 +34,21 @@ import org.apache.logging.log4j.Logger
 import restricted.fpe.advancements.critereon.BlockExtinguishedTrigger
 import restricted.fpe.advancements.critereon.CriteriaUtils
 import restricted.fpe.block.*
-import restricted.fpe.block.entity.*
-import restricted.fpe.enchant.*
-import restricted.fpe.extinguish.*
+import restricted.fpe.block.entity.FireDetectorBlockEntity
+import restricted.fpe.block.entity.FireSprinklerBlockEntity
+import restricted.fpe.block.entity.HomeFireStationBlockEntity
+import restricted.fpe.enchant.BlazeEnchant
+import restricted.fpe.enchant.FireHasteEnchant
+import restricted.fpe.enchant.HallowfireHeartEnchant
+import restricted.fpe.enchant.HotheadEnchant
+import restricted.fpe.extinguish.BuiltInRecipes
+import restricted.fpe.extinguish.ExtinguishContext
+import restricted.fpe.extinguish.ExtinguishRecipe
 import restricted.fpe.item.*
 import restricted.fpe.potion.SpreadingFireEffect
-import thedarkcolour.kotlinforforge.forge.*
+import thedarkcolour.kotlinforforge.forge.MOD_BUS
+import thedarkcolour.kotlinforforge.forge.registerObject
+import thedarkcolour.kotlinforforge.forge.runForDist
 
 const val ModId = "fire_protection_equipment"
 
@@ -54,7 +70,7 @@ object FPE {
 		)
 
 		MOD_BUS.addListener<FMLCommonSetupEvent> {
-			// registerFeatures()
+			 registerFeatures()
 		}
 
 		BuiltInRecipes.register()
@@ -66,33 +82,40 @@ object FPE {
 		}
 	}
 
-	private fun serverSetup(e: FMLDedicatedServerSetupEvent) {
-		e.enqueueWork {
-		}
-	}
+    private fun serverSetup(e: FMLDedicatedServerSetupEvent) {
+        e.enqueueWork {
+        }
+    }
 
-	private fun registerFeatures() {
-		FPEConst.Features.NaturalFireHydrant =
-			FeatureUtils.register(
-				"$ModId:fire_hydrant", Feature.FLOWER, FeatureUtils.simpleRandomPatchConfiguration(
-					64,
-					PlacementUtils.onlyWhenEmpty(
-						Feature.SIMPLE_BLOCK,
-						SimpleBlockConfiguration(WeightedStateProvider(SimpleWeightedRandomList.single(Blocks.FireHydrant.defaultBlockState())))
-					)
-				)
-			)
+    private fun registerFeatures() {
+        FPEConst.Features.NaturalFireHydrant = FeatureUtils.register(
+            "$ModId:fire_hydrant",
+            Feature.FLOWER,
+            RandomPatchConfiguration(
+                96,
+                0,
+                0,
+                PlacementUtils.onlyWhenEmpty(
+                    Feature.SIMPLE_BLOCK,
+                    SimpleBlockConfiguration(
+                        BlockStateProvider.simple(
+                            Blocks.FireHydrant
+                        )
+                    )
+                )
+            )
+        )
 
-		FPEConst.Placements.NaturalFireHydrant =
-			PlacementUtils.register(
-				"$ModId:fire_hydrant",
-				FPEConst.Features.NaturalFireHydrant,
-				listOf(
-					RarityFilter.onAverageOnceEvery(1),
-					PlacementUtils.HEIGHTMAP
-				)
-			)
-	}
+        FPEConst.Placements.NaturalFireHydrant =
+            PlacementUtils.register(
+                "$ModId:fire_hydrant",
+                FPEConst.Features.NaturalFireHydrant,
+                RarityFilter.onAverageOnceEvery(32),//决定稀有度，值越大越稀有
+                PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
+                InSquarePlacement.spread(),
+                BiomeFilter.biome()
+            )
+    }
 
 	object Blocks {
 		internal val registry: DeferredRegister<Block> = DeferredRegister.create(ForgeRegistries.BLOCKS, ModId)
