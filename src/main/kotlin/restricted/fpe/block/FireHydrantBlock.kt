@@ -54,6 +54,6 @@ object FireHydrantBlock : HorizontalDirectionalBlock(FPEConst.BlockConst.FireHyd
 	}
 
 	override fun canSurvive(pState: BlockState, pLevel: LevelReader, pPos: BlockPos): Boolean {
-		return pLevel.getBlockState(pPos.below()).isAir
+		return pLevel.getBlockState(pPos.below()).isCollisionShapeFullBlock(pLevel, pPos)
 	}
 }
