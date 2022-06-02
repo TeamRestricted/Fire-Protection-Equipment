@@ -56,53 +56,63 @@ object ExtinguishRecipe {
 
 	//////// REGISTER METHODS
 
+	/**
+	 * 注册方块浇灭合成
+	 *
+	 * @param blockState 被浇灭的简单方块状态
+	 * @param extinguishTypes 浇灭类型
+	 * @param func 浇灭执行的方法体
+	 */
 	fun registerBlock(
 		blockState: MiniBlockState,
+		extinguishTypes: Array<ExtinguishType> = ExtinguishType.ALL,
 		func: ExtinguishBlockFunction
-	) = registerBlock(blockState, ExtinguishType.ALL, func)
+	) = extinguishTypes.forEach { registerBlock(blockState, it, func) }
 
-	fun registerBlock(blockState: MiniBlockState, types: Array<ExtinguishType>, func: ExtinguishBlockFunction) =
-		types.forEach { registerBlock(blockState, it, func) }
-
-	fun registerBlock(
-		blockState: MiniBlockState,
-		extinguishType: ExtinguishType,
-		func: ExtinguishBlockFunction
-	) {
+	/**
+	 * 注册方块浇灭合成
+	 *
+	 * @param blockState 被浇灭的简单方块状态
+	 * @param extinguishType 浇灭类型
+	 * @param func 浇灭执行的方法体
+	 */
+	fun registerBlock(blockState: MiniBlockState, extinguishType: ExtinguishType, func: ExtinguishBlockFunction) =
 		recipes.put(blockState, extinguishType, func)
-	}
 
-	fun registerEntity(
-		entity: EntityType<*>,
-		func: ExtinguishEntityFunction
-	) = registerEntity(entity, ExtinguishType.ALL, func)
-
+	/**
+	 * 注册实体浇灭合成
+	 *
+	 * @param entityType 实体类型
+	 * @param extinguishTypes 浇灭类型
+	 * @param func 浇灭方法体
+	 */
 	fun registerEntity(
 		entityType: EntityType<*>,
-		extinguishTypes: Array<ExtinguishType>,
+		extinguishTypes: Array<ExtinguishType> = ExtinguishType.ALL,
 		func: ExtinguishEntityFunction
 	) = extinguishTypes.forEach { registerEntity(entityType, it, func) }
 
+	/**
+	 * 注册实体浇灭合成
+	 *
+	 * @param entityType 实体类型
+	 * @param extinguishType 浇灭类型
+	 * @param func 浇灭方法体
+	 */
 	fun registerEntity(
-		entityType: EntityType<*>,
-		extinguishType: ExtinguishType,
-		func: ExtinguishEntityFunction
-	) {
-		recipesEntity.put(entityType, extinguishType, func)
-	}
+		entityType: EntityType<*>, extinguishType: ExtinguishType, func: ExtinguishEntityFunction
+	) = recipesEntity.put(entityType, extinguishType, func)
 
 	operator fun get(blockState: BlockState, extinguishType: ExtinguishType): ExtinguishBlockFunction? {
 		if(blockState.block in invalidBlocks) return null
 
-		return recipes.column(extinguishType)
-			.firstNotNullOfOrNull { (miniState, value) ->
-				if(miniState.apply(blockState)) value else null
-			}
+		return recipes.column(extinguishType).firstNotNullOfOrNull { (miniState, value) ->
+			if(miniState.apply(blockState)) value else null
+		}
 	}
 
 	fun <T : Entity> getForEntity(
-		entityType: EntityType<T>,
-		extinguishType: ExtinguishType
+		entityType: EntityType<T>, extinguishType: ExtinguishType
 	): ExtinguishEntityFunction? {
 		return recipesEntity[entityType, extinguishType]
 	}
@@ -110,9 +120,9 @@ object ExtinguishRecipe {
 	//////// FAST FUNCTIONS
 
 	private fun canDefaultExtinguish(ctx: ExtinguishContext): Boolean =
-		(ctx.itemstack == null) ||
-				(ctx.itemstack.item == FPE.Items.FireExtinguisher && FireExtinguisherItem.canExtinguishFire(ctx, ctx.centerPos)) ||
-				(ctx.itemstack.item == MinecraftItems.FIREWORK_ROCKET && FireworkHelper.hasExtinguishingStar(ctx.itemstack))
+		(ctx.itemstack == null) || (ctx.itemstack.item == FPE.Items.FireExtinguisher && FireExtinguisherItem.canExtinguishFire(
+			ctx, ctx.centerPos
+		)) || (ctx.itemstack.item == MinecraftItems.FIREWORK_ROCKET && FireworkHelper.hasExtinguishingStar(ctx.itemstack))
 
 	private val DIRECTLY_EXTINGUISH: ExtinguishBlockFunction = { ctx, _, pos ->
 		if(canDefaultExtinguish(ctx)) {
@@ -123,9 +133,9 @@ object ExtinguishRecipe {
 		}
 	}
 
-	fun directly(): ExtinguishBlockFunction = DIRECTLY_EXTINGUISH
+	private fun directly(): ExtinguishBlockFunction = DIRECTLY_EXTINGUISH
 
-	fun replaceWithBlock(newState: BlockState): ExtinguishBlockFunction = { ctx, _, pos ->
+	private fun replaceWithBlock(newState: BlockState): ExtinguishBlockFunction = { ctx, _, pos ->
 		if(canDefaultExtinguish(ctx)) {
 			ctx.level.setBlockAndUpdate(pos, newState)
 		}
@@ -133,6 +143,14 @@ object ExtinguishRecipe {
 			sendParticles(ParticleTypes.CLOUD, pos.vec3, (1..20).random(), 0.2)
 		}
 	}
+
+	fun registerReplaceBlock(
+		oldState: MiniBlockState, newState: BlockState, extinguishTypes: Array<ExtinguishType> = ExtinguishType.ALL
+	) = registerBlock(oldState, extinguishTypes, replaceWithBlock(newState))
+
+	fun registerDirectlyExtinguish(
+		fireState: MiniBlockState, extinguishTypes: Array<ExtinguishType> = ExtinguishType.ALL
+	) = registerBlock(fireState, extinguishTypes, directly())
 
 	//////// BUILDER
 
@@ -146,7 +164,9 @@ object ExtinguishRecipe {
 			BuilderForMiniBlockState(block.buildMiniState()).apply(func).build()
 		}
 
-		fun <T : Comparable<T>> withState(vararg pairs: Pair<Property<T>, T>, func: BuilderForMiniBlockState.() -> Unit) {
+		fun <T : Comparable<T>> withState(
+			vararg pairs: Pair<Property<T>, T>, func: BuilderForMiniBlockState.() -> Unit
+		) {
 			val miniState = block.buildMiniState {
 				pairs.forEach {
 					with(it.first, it.second)

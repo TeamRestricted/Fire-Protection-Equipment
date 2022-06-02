@@ -8,36 +8,42 @@ import net.minecraft.world.entity.MobSpawnType
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.monster.MagmaCube
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
+import net.minecraftforge.registries.ForgeRegistries
 import restricted.fpe.*
 import restricted.fpe.extinguish.ExtinguishRecipe.MiniBlockState.Builder.Companion.buildMiniState
-import java.lang.reflect.Modifier
 
 object BuiltInRecipes {
 
 	fun register() {
 		logger.debug("Register Extinguish Recipes")
 
-		ExtinguishRecipe.registerBlock(MinecraftBlocks.FIRE.buildMiniState(), ExtinguishRecipe.directly())
-		ExtinguishRecipe.registerBlock(MinecraftBlocks.SOUL_FIRE.buildMiniState(), ExtinguishRecipe.directly())
-		ExtinguishRecipe.registerBlock(MinecraftBlocks.CAMPFIRE.buildMiniState { with(BlockStateProperties.LIT, true) },
-			ExtinguishRecipe.replaceWithBlock(
-				MinecraftBlocks.CAMPFIRE.defaultBlockState().setValue(BlockStateProperties.LIT, false)
-			)
+		fun Block.ofLit(lit: Boolean) = buildMiniState {
+			with(BlockStateProperties.LIT, lit)
+		}
+
+		ExtinguishRecipe.registerDirectlyExtinguish(MinecraftBlocks.FIRE.buildMiniState())
+		ExtinguishRecipe.registerDirectlyExtinguish(MinecraftBlocks.SOUL_FIRE.buildMiniState())
+		ExtinguishRecipe.registerReplaceBlock(
+			MinecraftBlocks.CAMPFIRE.ofLit(true),
+			MinecraftBlocks.CAMPFIRE.defaultBlockState().setValue(BlockStateProperties.LIT, false)
 		)
-		ExtinguishRecipe.registerBlock(MinecraftBlocks.SOUL_CAMPFIRE.buildMiniState { with(BlockStateProperties.LIT, true) },
-			ExtinguishRecipe.replaceWithBlock(
-				MinecraftBlocks.SOUL_CAMPFIRE.defaultBlockState().setValue(BlockStateProperties.LIT, false)
-			)
+		ExtinguishRecipe.registerReplaceBlock(
+			MinecraftBlocks.SOUL_CAMPFIRE.ofLit(true),
+			MinecraftBlocks.SOUL_CAMPFIRE.defaultBlockState().setValue(BlockStateProperties.LIT, false)
 		)
-		ExtinguishRecipe.registerBlock(MinecraftBlocks.NETHER_PORTAL.buildMiniState(), ExtinguishRecipe.directly())
+
+		ExtinguishRecipe.registerDirectlyExtinguish(MinecraftBlocks.NETHER_PORTAL.buildMiniState())
 
 		ExtinguishRecipe.builder(EntityType.BLAZE) {
 			dryIce { ctx, entity ->
 				ctx.level.runOnRemote {
 					if(entity.isAlive) {
 						entity.hurt(FPEConst.DamageSourceConst.Extinguish, 100.0F)
-						val itemEntity = ItemEntity(this, entity.x, entity.y, entity.z, ItemStack(MinecraftItems.BLAZE_ROD, (6..8).random()))
+						val itemEntity = ItemEntity(
+							this, entity.x, entity.y, entity.z, ItemStack(MinecraftItems.BLAZE_ROD, (6..8).random())
+						)
 						addFreshEntity(itemEntity)
 					}
 				}
@@ -49,6 +55,8 @@ object BuiltInRecipes {
 			}
 		}
 
+		// 岩浆怪 => 史莱姆
+		// FIXME: 设置史莱姆与岩浆怪相同大小
 		ExtinguishRecipe.builder(EntityType.MAGMA_CUBE) {
 			water { ctx, magma ->
 				ctx.level.runOnRemote {
@@ -56,7 +64,9 @@ object BuiltInRecipes {
 						playSound(null, magma, SoundEvents.WATER_AMBIENT, SoundSource.PLAYERS, 1.0F, 1.0F)
 						sendParticles(ParticleTypes.EXPLOSION, magma.eyePosition, 20, 0.2)
 						magma.tags
-						val slime = EntityType.SLIME.create(this, null, null, ctx.player, magma.onPos, MobSpawnType.TRIGGERED, true, true)!!
+						val slime = EntityType.SLIME.create(
+							this, null, null, ctx.player, magma.onPos, MobSpawnType.TRIGGERED, true, true
+						)!!
 						slime.yBodyRot = magma.yBodyRot
 						magma.discard()
 						addFreshEntity(slime)
@@ -65,16 +75,9 @@ object BuiltInRecipes {
 			}
 		}
 
-		EntityType::class.java.declaredFields.forEach {
-			runCatching {
-				it.trySetAccessible()
-				if(Modifier.isStatic(it.modifiers) && Modifier.isFinal(it.modifiers) && it.type == EntityType::class.java) {
-					ExtinguishRecipe.registerEntity(it.get(null) as EntityType<*>, ExtinguishType.WATER) { _, entity ->
-						entity.clearFire()
-					}
-				}
-			}.onFailure { error ->
-				logger.warn("Unable to register the Water-Extinguish-Fire recipe for ${it.name}", error)
+		ForgeRegistries.ENTITIES.values.forEach {
+			ExtinguishRecipe.registerEntity(it, ExtinguishType.WATER) { _, entity ->
+				entity.clearFire()
 			}
 		}
 

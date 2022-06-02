@@ -74,6 +74,7 @@ repositories {
     maven { url = "https://maven.parchmentmc.org" }
     maven { url "https://cursemaven.com"; content {includeGroup("curse.maven")  } }
     maven { url = "https://maven.blamejared.com" }
+    maven { url = "https://dvs1.progwml6.com/files/maven/" } // JEI
 }
 
 dependencies {
@@ -86,6 +87,9 @@ dependencies {
 
     compileOnly("com.blamejared.crafttweaker:CraftTweaker-forge-1.18.2:${project.ctVersion}")
     runtimeOnly(fg.deobf("com.blamejared.crafttweaker:CraftTweaker-forge-1.18.2:${project.ctVersion}"))
+
+    compileOnly fg.deobf("mezz.jei:jei-1.18.2:${project.jeiVersion}:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.18.2:${project.jeiVersion}")
 }
 
 jar {
