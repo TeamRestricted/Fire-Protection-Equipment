@@ -22,14 +22,21 @@ public abstract class MixinFurnaceTileEntity {
 
 	private static final Random RANDOM = new Random();
 
+//	@Shadow
+//	protected abstract boolean isLit();
+
 	@Shadow
-	protected abstract boolean isLit();
+	int litTime;
+
+	private boolean isLitNice() {
+		return litTime > 0;
+	}
 
 	@Inject(method = "serverTick", at = @At("HEAD"))
 	private static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, AbstractFurnaceBlockEntity pBlockEntity, CallbackInfo ci) {
 		var mixinFurnaceEntity = (MixinFurnaceTileEntity) (Object) pBlockEntity;
 		if(pBlockEntity instanceof FurnaceBlockEntity) {
-			var isLit = mixinFurnaceEntity.isLit();
+			var isLit = mixinFurnaceEntity.isLitNice();//.isLit();
 			if(isLit) {
 				if(RANDOM.nextInt(100) > 98) {
 					var blockPosToFire = getAnyBlockPosCanFire(pLevel, pPos);
