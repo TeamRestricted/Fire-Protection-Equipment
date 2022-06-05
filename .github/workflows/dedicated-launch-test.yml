@@ -39,7 +39,7 @@ jobs:
         shell: bash
         run: |
           chmod +x ./gradlew
-          ./gradlew build --max-workers=1
+          ./gradlew -I .github/workflows/dedicated-launch-test/setup.gradle build --max-workers=1
       
       - name: Dedicated Server Launching Test
         id: dedicated_server_launching
