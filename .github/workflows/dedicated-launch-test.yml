@@ -41,6 +41,12 @@ jobs:
           chmod +x ./gradlew
           ./gradlew -I .github/workflows/dedicated-launch-test/setup.gradle build --max-workers=1
       
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Artifact
+          path: build/libs/*.jar
+
       - name: Dedicated Server Launching Test
         id: dedicated_server_launching
         uses: teaconmc/dedicated-launch-test@1.18
