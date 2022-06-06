@@ -2,6 +2,7 @@
 
 package restricted.fpe
 
+import net.minecraft.core.particles.SimpleParticleType
 import net.minecraft.data.worldgen.features.FeatureUtils
 import net.minecraft.data.worldgen.placement.PlacementUtils
 import net.minecraft.server.level.ServerLevel
@@ -9,10 +10,7 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.item.ArmorItem
-import net.minecraft.world.item.CreativeModeTab
-import net.minecraft.world.item.Item
-import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.*
 import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntityType
@@ -20,13 +18,9 @@ import net.minecraft.world.level.levelgen.feature.Feature
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider
-import net.minecraft.world.level.levelgen.placement.BiomeFilter
-import net.minecraft.world.level.levelgen.placement.InSquarePlacement
-import net.minecraft.world.level.levelgen.placement.RarityFilter
+import net.minecraft.world.level.levelgen.placement.*
 import net.minecraftforge.fml.common.Mod
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
-import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent
+import net.minecraftforge.fml.event.lifecycle.*
 import net.minecraftforge.registries.DeferredRegister
 import net.minecraftforge.registries.ForgeRegistries
 import org.apache.logging.log4j.LogManager
@@ -34,21 +28,12 @@ import org.apache.logging.log4j.Logger
 import restricted.fpe.advancements.critereon.BlockExtinguishedTrigger
 import restricted.fpe.advancements.critereon.CriteriaUtils
 import restricted.fpe.block.*
-import restricted.fpe.block.entity.FireDetectorBlockEntity
-import restricted.fpe.block.entity.FireSprinklerBlockEntity
-import restricted.fpe.block.entity.HomeFireStationBlockEntity
-import restricted.fpe.enchant.BlazeEnchant
-import restricted.fpe.enchant.FireHasteEnchant
-import restricted.fpe.enchant.HallowfireHeartEnchant
-import restricted.fpe.enchant.HotheadEnchant
-import restricted.fpe.extinguish.BuiltInRecipes
-import restricted.fpe.extinguish.ExtinguishContext
-import restricted.fpe.extinguish.ExtinguishRecipe
+import restricted.fpe.block.entity.*
+import restricted.fpe.enchant.*
+import restricted.fpe.extinguish.*
 import restricted.fpe.item.*
 import restricted.fpe.potion.SpreadingFireEffect
-import thedarkcolour.kotlinforforge.forge.MOD_BUS
-import thedarkcolour.kotlinforforge.forge.registerObject
-import thedarkcolour.kotlinforforge.forge.runForDist
+import thedarkcolour.kotlinforforge.forge.*
 
 const val ModId = "fire_protection_equipment"
 
@@ -60,6 +45,7 @@ object FPE {
 	init {
 		Enchants.registry.register(MOD_BUS)
 		MobEffects.registry.register(MOD_BUS)
+		ParticleTypes.registry.register(MOD_BUS)
 		BlockEntityTypes.registry.register(MOD_BUS)
 		Blocks.registry.register(MOD_BUS)
 		Items.registry.register(MOD_BUS)
@@ -227,6 +213,12 @@ object FPE {
 				Blocks.FireAlarmControlUnit
 			).build(null)
 		}
+	}
+
+	object ParticleTypes {
+		internal val registry = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, ModId)
+
+		val WaterFluid by registry.registerObject("water_fluid") { SimpleParticleType(false) }
 	}
 
 	@JvmStatic

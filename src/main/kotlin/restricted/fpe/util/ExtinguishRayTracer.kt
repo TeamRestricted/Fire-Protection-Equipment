@@ -19,18 +19,22 @@ class ExtinguishRayTracer(val entity: LivingEntity) {
 
 	data class Traced(val motion: Vec3, val pos: Vec3)
 
-	private var hit: HitResult? = null
+	var hit: HitResult? = null
 
-	private val traced: List<Traced> by lazy {
-		val startPos = entity.position().add(0.0, entity.eyeHeight * 0.6, 0.0)
+	val hitEntity: Entity? get() = (hit as? EntityHitResult)?.entity
+
+	private val traced: LinkedList<Traced> = LinkedList<Traced>()
+
+	init {
+		val startPos = entity.position().add(0.0, entity.eyeHeight * 0.75, 0.0)
 		val startMotion = entity.lookAngle.add(0.0, 0.2, 0.0).normalize()
 
-		val tracedList = LinkedList<Traced>().apply { add(Traced(startMotion, startPos)) }
+		traced.add(Traced(startMotion, startPos))
 
 		var continueRayTracing = true
 		while(continueRayTracing) {
-			val motion = tracedList[0].motion
-			val pos = tracedList[0].pos
+			val motion = traced[0].motion
+			val pos = traced[0].pos
 
 			val newMotion = motion.subtract(0.0, 0.1, 0.0).run {
 				if(this.lengthSqr() <= 1) this else this.normalize()
@@ -56,14 +60,10 @@ class ExtinguishRayTracer(val entity: LivingEntity) {
 				val endPos = pos.add(newPos.subtract(pos).run { this.normalize().scale(bboxMaxSize + this.length()) })
 				newPos = bb2.clip(endPos, pos).orElse(newPos).add(bb2.clip(pos, endPos).orElse(newPos)).scale(0.5)
 			}
-			tracedList.push(Traced(newMotion, newPos))
+			traced.push(Traced(newMotion, newPos))
 			if(newPos.y < 0) continueRayTracing = false
 		}
-
-		tracedList
 	}
-
-	val hitEntity: Entity? get() = if(hit is EntityHitResult) (hit as EntityHitResult).entity else null
 
 	fun discretized(factor: Int): List<Vec3> {
 		val tmpTraced = LinkedList(traced)

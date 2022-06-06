@@ -1,18 +1,20 @@
 package restricted.fpe.item
 
 import net.minecraft.core.particles.ParticleOptions
-import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
+import net.minecraft.world.phys.BlockHitResult
+import net.minecraft.world.phys.EntityHitResult
 import restricted.fpe.*
+import restricted.fpe.extinguish.ExtinguishContext
+import restricted.fpe.extinguish.ExtinguishType
 import restricted.fpe.util.ExtinguishRayTracer
 
 object HoseNozzleItem : Item(FPEConst.ItemConst.DefaultNonStackableItemProp) {
@@ -28,8 +30,8 @@ object HoseNozzleItem : Item(FPEConst.ItemConst.DefaultNonStackableItemProp) {
 		player.level.runOnRemote {
 			val tracer = ExtinguishRayTracer(player)
 			when(count % 2) {
-				0 -> handleHit(player, tracer.hitEntity)
-				else -> addParticles(this, player, tracer, ParticleTypes.FLAME)
+				0 -> handleHit(player, tracer)
+				else -> addParticles(this, player, tracer, FPE.ParticleTypes.WaterFluid)
 			}
 		}
 	}
@@ -45,8 +47,15 @@ object HoseNozzleItem : Item(FPEConst.ItemConst.DefaultNonStackableItemProp) {
 		}
 	}
 
-	private fun handleHit(player: LivingEntity, target: Entity?) {
-		target?.hurt(DamageSource.DRY_OUT, 1.0F)
+	private fun handleHit(player: LivingEntity, tracer: ExtinguishRayTracer) {
+		val hit = tracer.hit
+		if(hit is EntityHitResult) {
+			hit.entity.hurt(DamageSource.DRY_OUT, 1.0F)
+		}
+		if(hit is BlockHitResult) {
+			val ctx = ExtinguishContext(player.level, hit.blockPos, 2, ExtinguishType.WATER, player as? Player, null)
+			FPE.extinguishFire(ctx)
+		}
 	}
 
 }
