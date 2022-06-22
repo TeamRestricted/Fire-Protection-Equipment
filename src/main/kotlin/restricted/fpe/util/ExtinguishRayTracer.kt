@@ -61,7 +61,7 @@ class ExtinguishRayTracer(val entity: LivingEntity) {
 				newPos = bb2.clip(endPos, pos).orElse(newPos).add(bb2.clip(pos, endPos).orElse(newPos)).scale(0.5)
 			}
 			traced.push(Traced(newMotion, newPos))
-			if(newPos.y < 0) continueRayTracing = false
+			if(newPos.y < -100 || newPos.y > 400) continueRayTracing = false
 		}
 	}
 

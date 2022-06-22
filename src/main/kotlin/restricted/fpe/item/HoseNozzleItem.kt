@@ -50,7 +50,7 @@ object HoseNozzleItem : Item(FPEConst.ItemConst.DefaultNonStackableItemProp) {
 	private fun handleHit(player: LivingEntity, tracer: ExtinguishRayTracer) {
 		val hit = tracer.hit
 		if(hit is EntityHitResult) {
-			hit.entity.hurt(DamageSource.DRY_OUT, 1.0F)
+			hit.entity.hurt(DamageSource.FLY_INTO_WALL, 1.0F)
 		}
 		if(hit is BlockHitResult) {
 			val ctx = ExtinguishContext(player.level, hit.blockPos, 2, ExtinguishType.WATER, player as? Player, null)
