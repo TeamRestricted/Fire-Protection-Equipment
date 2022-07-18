@@ -1,5 +1,6 @@
 package restricted.fpe.block.entity
 
+import net.minecraft.core.BlockPos
 import net.minecraft.world.level.block.entity.BlockEntity
 
 /**
@@ -9,6 +10,6 @@ interface IHomeFireDevice {
 
 	val onFire: Boolean
 
-	var boundTo: HomeFireStationBlockEntity?
+	var boundToLocation: BlockPos?
 
 }

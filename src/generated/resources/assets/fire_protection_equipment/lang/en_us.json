@@ -41,5 +41,11 @@
   "item.fire_protection_equipment.firework_star": "Extinguish Star",
   "item.fire_protection_equipment.furnace_fire_protection_device": "Furnace Fire Protection Device",
   "item.fire_protection_equipment.hose_nozzle": "Hose Nozzle",
-  "itemGroup.fire_protection_equipment": "Fire Protection Equipment"
+  "item.fire_protection_equipment.linking_device": "Linking Device",
+  "itemGroup.fire_protection_equipment": "Fire Protection Equipment",
+  "message.fire_protection_equipment.linking.binding": "Device bound to {0}.",
+  "message.fire_protection_equipment.linking.missing-target": "Linking Device has not set the Target Controller",
+  "message.fire_protection_equipment.linking.no-bound": "Device is not bound.",
+  "message.fire_protection_equipment.linking.selected": "Selected Device at {0}.",
+  "message.fire_protection_equipment.linking.too_far_away": "Binding device too far away from Controller"
 }

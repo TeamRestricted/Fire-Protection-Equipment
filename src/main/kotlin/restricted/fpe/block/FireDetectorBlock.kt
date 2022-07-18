@@ -4,8 +4,6 @@ package restricted.fpe.block
 
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
-import net.minecraft.sounds.SoundEvents
-import net.minecraft.sounds.SoundSource
 import net.minecraft.tags.BlockTags
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.*
@@ -17,6 +15,7 @@ import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
 import restricted.fpe.*
 import restricted.fpe.FPEConst.BlockConst.VERTICAL_FACING
+import restricted.fpe.block.entity.AbstractHomeFireDevice
 import restricted.fpe.block.entity.FireDetectorBlockEntity
 
 @Suppress("OVERRIDE_DEPRECATION")
@@ -86,17 +85,17 @@ object FireDetectorBlock : BaseEntityBlock(FPEConst.BlockConst.FireDetectorProp)
 	}
 
 	override fun onPlace(state: BlockState, level: Level, pos: BlockPos, pOldState: BlockState, pIsMoving: Boolean) {
-		level.getBlockEntity(pos, FPE.BlockEntityTypes.FireDetector).ifPresent { fireDetectorEntity ->
-			BlockPos.betweenClosedStream(boundingBoxOfCenter(pos, 15)).forEach { p ->
-				val b = level.getBlockState(p)
-				if(b.hasBlockEntity()) {
-					level.getBlockEntity(p, FPE.BlockEntityTypes.HomeFireStation).ifPresent {
-						it.bindDevice(fireDetectorEntity)
-						level.playSound(null, pos, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.BLOCKS, 1.0F, 1.0F)
-					}
-				}
-			}
-		}
+//		level.getBlockEntity(pos, FPE.BlockEntityTypes.FireDetector).ifPresent { fireDetectorEntity ->
+//			BlockPos.betweenClosedStream(boundingBoxOfCenter(pos, 15)).forEach { p ->
+//				val b = level.getBlockState(p)
+//				if(b.hasBlockEntity()) {
+//					level.getBlockEntity(p, FPE.BlockEntityTypes.HomeFireStation).ifPresent {
+//						it.registerDevice(fireDetectorEntity)
+//						level.playSound(null, pos, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.BLOCKS, 1.0F, 1.0F)
+//					}
+//				}
+//			}
+//		}
 	}
 
 	override fun onRemove(
@@ -106,8 +105,9 @@ object FireDetectorBlock : BaseEntityBlock(FPEConst.BlockConst.FireDetectorProp)
 		pNewState: BlockState,
 		pIsMoving: Boolean
 	) {
-		pLevel.getBlockEntity(pPos, FPE.BlockEntityTypes.FireDetector).ifPresent {
-			it.unbind()
+		val be = pLevel.getBlockEntity(pPos)
+		if(be is AbstractHomeFireDevice<*>) {
+			be.tryUnbind(pLevel)
 		}
 		super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving)
 	}

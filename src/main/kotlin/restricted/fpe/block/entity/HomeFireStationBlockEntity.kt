@@ -1,11 +1,11 @@
 package restricted.fpe.block.entity
 
 import net.minecraft.core.BlockPos
-import net.minecraft.nbt.*
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.ListTag
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import restricted.fpe.*
-import restricted.fpe.buildCompoundTag
 import restricted.fpe.util.BlockPosTag.Companion.blockPos
 import restricted.fpe.util.BlockPosTag.Companion.toCompoundTag
 
@@ -21,18 +21,16 @@ class HomeFireStationBlockEntity(pos: BlockPos, state: BlockState) :
 
 	val onFire: Boolean get() = connectedDevices.any { it.onFire }
 
-	@Deprecated("Use AbstractHomeFireDevice#bind(HomeFireStationBlockEntity)")
-	fun bindDevice(entity: AbstractHomeFireDevice<*>) {
+	fun registerDevice(entity: AbstractHomeFireDevice<*>) {
 		connectedDevices += entity
 		connectedDevicesPos += entity.blockPos.asLong()
-		entity.boundTo = this
+		setChanged()
 	}
 
-	@Deprecated("Use AbstractHomeFireDevice#unbind")
-	fun unbindDevice(entity: AbstractHomeFireDevice<*>) {
+	fun unregisterDevice(entity: AbstractHomeFireDevice<*>) {
 		connectedDevices -= entity
 		connectedDevicesPos -= entity.blockPos.asLong()
-		entity.boundTo = null
+		setChanged()
 	}
 
 	/**
@@ -41,14 +39,16 @@ class HomeFireStationBlockEntity(pos: BlockPos, state: BlockState) :
 	 */
 	fun refreshDeviceEntitiesWhenWorldIsReady() {
 		val illegals = mutableSetOf<Long>()
-		connectedDevicesPos.forEach {
-			val entity = level!!.getBlockEntity(BlockPos.of(it))
-			if(entity is AbstractHomeFireDevice<*>) {
-				entity.boundTo = this
-				connectedDevices += entity
-			} else {
-				logger.warn("Cannot cast $it(${it.javaClass.simpleName}) to AbstractHomeFireDevice, skipping and removing.")
-				illegals += it
+		connectedDevicesPos.map(BlockPos::of).forEach {
+			if(level!!.isLoaded(it)) {
+				val entity = level!!.getBlockEntity(it)
+				if(entity is AbstractHomeFireDevice<*>) {
+					entity.bind(this)
+					connectedDevices += entity
+				} else {
+					logger.warn("Cannot cast $it(${it.javaClass.simpleName}) to AbstractHomeFireDevice, skipping and removing.")
+					illegals += it.asLong()
+				}
 			}
 		}
 		connectedDevicesPos -= illegals
@@ -56,7 +56,7 @@ class HomeFireStationBlockEntity(pos: BlockPos, state: BlockState) :
 
 	override fun getUpdateTag(): CompoundTag {
 		return buildCompoundTag {
-			put("bound_positions", ListTag().apply { addAll(connectedDevicesPos.map { BlockPos.of(it).toCompoundTag() }) }.apply { this.elementType.let(::println) })
+			put("bound_positions", ListTag().apply { addAll(connectedDevicesPos.map { BlockPos.of(it).toCompoundTag() }) })
 		}
 	}
 

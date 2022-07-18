@@ -132,6 +132,7 @@ object FPE {
 		val HoseNozzle by registry.registerObject("hose_nozzle") { HoseNozzleItem }
 		val FireAlarmControlTerminal by registry.registerObject("fire_alarm_control_terminal") { FireAlarmControlTerminalItem }
 		val HandCrankSiren by registry.registerObject("hand_crank_siren") { HandCrankSirenItem }
+		val LinkingDevice by registry.registerObject("linking_device") { LinkingDeviceItem }
 
 		val FurnaceFireProtectionDevice by registry.registerObject("furnace_fire_protection_device") { FurnaceFireProtectionDeviceItem }
 

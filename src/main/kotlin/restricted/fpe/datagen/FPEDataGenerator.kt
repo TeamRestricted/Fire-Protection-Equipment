@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent
 import restricted.fpe.FPE
 import restricted.fpe.ModId
+import restricted.fpe.item.LinkingDeviceItem
 
 @SubscribeEvent
 fun gatherData(e: GatherDataEvent) {
@@ -158,6 +159,12 @@ private fun registerLanguages() = FPELanguage.apply {
 		tw("消防靴")
 	}
 
+	item(FPE.Items.LinkingDevice) {
+		en("Linking Device")
+		zh("连接设备")
+		tw("連接設備")
+	}
+
 	enchant(FPE.Enchants.FireHaste) {
 		en("Fire Walker")
 		zh("十万火急")
@@ -294,5 +301,35 @@ private fun registerLanguages() = FPELanguage.apply {
 		en("Dry Ice")
 		zh("干冰")
 		tw("二氧化碳")
+	}
+
+	add(LinkingDeviceItem.TranslationBinding) {
+		en("Device bound to {0}.")
+		zh("设备绑定到 {0}")
+		tw("設備綁定到 {0}")
+	}
+
+	add(LinkingDeviceItem.TranslationSelected) {
+		en("Selected Device at {0}.")
+		zh("选择设备 {0}")
+		tw("選擇設備 {0}")
+	}
+
+	add(LinkingDeviceItem.TranslationMissingTarget) {
+		en("Linking Device has not set the Target Controller")
+		zh("连接设备尚未设定目标控制器。")
+		tw("設備尚未設定目標控制器")
+	}
+
+	add(LinkingDeviceItem.TranslationTooFarAway) {
+		en("Binding device too far away from Controller")
+		zh("连接设备距离控制器距离过远")
+		tw("設備距離控制器過遠")
+	}
+
+	add(LinkingDeviceItem.TranslationBoundNothing) {
+		en("Device is not bound.")
+		zh("设备尚未绑定")
+		tw("設備尚未綁定")
 	}
 }

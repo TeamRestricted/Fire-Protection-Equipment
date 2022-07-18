@@ -41,5 +41,11 @@
   "item.fire_protection_equipment.firework_star": "\u706D\u706B\u4E4B\u661F",
   "item.fire_protection_equipment.furnace_fire_protection_device": "\u7194\u7089\u9632\u706B\u8BBE\u5907",
   "item.fire_protection_equipment.hose_nozzle": "\u6D88\u9632\u8F6F\u7BA1\u55B7\u5934",
-  "itemGroup.fire_protection_equipment": "\u6D88\u9632\u4E0E\u706D\u706B"
+  "item.fire_protection_equipment.linking_device": "\u8FDE\u63A5\u8BBE\u5907",
+  "itemGroup.fire_protection_equipment": "\u6D88\u9632\u4E0E\u706D\u706B",
+  "message.fire_protection_equipment.linking.binding": "\u8BBE\u5907\u7ED1\u5B9A\u5230 {0}",
+  "message.fire_protection_equipment.linking.missing-target": "\u8FDE\u63A5\u8BBE\u5907\u5C1A\u672A\u8BBE\u5B9A\u76EE\u6807\u63A7\u5236\u5668\u3002",
+  "message.fire_protection_equipment.linking.no-bound": "\u8BBE\u5907\u5C1A\u672A\u7ED1\u5B9A",
+  "message.fire_protection_equipment.linking.selected": "\u9009\u62E9\u8BBE\u5907 {0}",
+  "message.fire_protection_equipment.linking.too_far_away": "\u8FDE\u63A5\u8BBE\u5907\u8DDD\u79BB\u63A7\u5236\u5668\u8DDD\u79BB\u8FC7\u8FDC"
 }
