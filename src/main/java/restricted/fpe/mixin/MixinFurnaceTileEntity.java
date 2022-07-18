@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @SuppressWarnings("ConstantConditions")
@@ -22,8 +21,8 @@ public abstract class MixinFurnaceTileEntity {
 
 	private static final Random RANDOM = new Random();
 
-//	@Shadow
-//	protected abstract boolean isLit();
+	@Shadow
+	protected abstract boolean isLit();
 
 	@Shadow
 	int litTime;
@@ -52,7 +51,7 @@ public abstract class MixinFurnaceTileEntity {
 	 * 在熔炉六面中随机选择一面为空气方块的位置并返回，如果没有则返回 {@code null}。
 	 */
 	private static BlockPos getAnyBlockPosCanFire(Level level, BlockPos pos) {
-		var flammable = Stream.of(pos.above(), pos.below(), pos.east(), pos.west(), pos.north(), pos.south()).filter((bp) -> level.getBlockState(bp).is(Blocks.AIR)).collect(Collectors.toList());
+		var flammable = Stream.of(pos.above(), pos.below(), pos.east(), pos.west(), pos.north(), pos.south()).filter((bp) -> level.getBlockState(bp).is(Blocks.AIR)).toList();
 		if(flammable.size() == 0) {
 			return null;
 		} else {

@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "fire_protection_equipment:block/home_fire_station"
+      "model": "fire_protection_equipment:block/fire_alarm_control_unit"
     }
   }
 }

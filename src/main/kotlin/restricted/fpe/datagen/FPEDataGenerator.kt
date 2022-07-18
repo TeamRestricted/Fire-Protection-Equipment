@@ -133,6 +133,31 @@ private fun registerLanguages() = FPELanguage.apply {
 		tw("磷酸二氫銨粉末")
 	}
 
+	// firefighter suits
+	item(FPE.Items.FirefightersHelmet) {
+		en("Firefighter's Helmet")
+		zh("消防服头盔")
+		tw("消防服頭盔")
+	}
+
+	item(FPE.Items.FirefightersChestplate) {
+		en("Firefighter's Chestplate")
+		zh("消防服胸甲")
+		tw("消防服胸甲")
+	}
+
+	item(FPE.Items.FirefightersLeggings) {
+		en("Firefighter's Leggings")
+		zh("消防服护腿")
+		tw("消防服護腿")
+	}
+
+	item(FPE.Items.FirefightersBoots) {
+		en("Firefighter's Boots")
+		zh("消防靴")
+		tw("消防靴")
+	}
+
 	enchant(FPE.Enchants.FireHaste) {
 		en("Fire Walker")
 		zh("十万火急")
