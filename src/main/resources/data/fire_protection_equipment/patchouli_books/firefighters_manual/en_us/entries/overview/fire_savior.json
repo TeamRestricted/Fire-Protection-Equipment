@@ -1,0 +1,18 @@
+{
+    "sortnum": 1,
+    "name": "patchouli.fire_protection_equipment.book.entries.overview.fire_savior.name",
+    "icon": "fire_protection_equipment:fire_extinguisher",
+    "category": "fire_protection_equipment:overview",
+    "advancement": "fire_protection_equipment:went_into_fire",
+    "pages": [
+      {
+        "type": "patchouli:text",
+        "text": "patchouli.fire_protection_equipment.book.entries.overview.fire_savior.pages.0.text"
+      },
+      {
+        "type": "patchouli:spotlight",
+        "item": "fire_protection_equipment:fire_extinguisher{'fire_protection_equipment:extinguisher':{'type':'FIRE_SAVIOR'}}",
+        "text": "patchouli.fire_protection_equipment.book.entries.overview.fire_savior.pages.1.text"
+      }
+    ]
+  }

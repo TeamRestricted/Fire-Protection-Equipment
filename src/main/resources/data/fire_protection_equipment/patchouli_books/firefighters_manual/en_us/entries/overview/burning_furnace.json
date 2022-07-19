@@ -1,0 +1,15 @@
+{
+  "sortnum": 1,
+  "name": "patchouli.fire_protection_equipment.book.entries.overview.burning_furnace.name",
+  "icon": "minecraft:furnace",
+  "category": "fire_protection_equipment:overview",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "patchouli.fire_protection_equipment.book.entries.overview.burning_furnace.pages.0.text"
+    }, {
+      "type": "patchouli:image",
+      "images": ["fire_protection_equipment:textures/book/burning_furnace.png"]
+    }
+  ]
+}

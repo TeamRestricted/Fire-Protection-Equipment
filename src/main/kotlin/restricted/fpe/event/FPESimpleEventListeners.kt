@@ -5,9 +5,12 @@ package restricted.fpe.event
 import net.minecraft.core.Direction
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.npc.VillagerTrades
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.ShovelItem
 import net.minecraft.world.item.enchantment.EnchantmentHelper
+import net.minecraft.world.item.trading.MerchantOffer
 import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.block.CampfireBlock
 import net.minecraft.world.level.block.FireBlock
@@ -16,6 +19,7 @@ import net.minecraftforge.event.TickEvent
 import net.minecraftforge.event.entity.living.LivingDamageEvent
 import net.minecraftforge.event.entity.living.LivingHurtEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
+import net.minecraftforge.event.village.VillagerTradesEvent
 import net.minecraftforge.event.world.BiomeLoadingEvent
 import net.minecraftforge.event.world.BlockEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
@@ -24,6 +28,7 @@ import restricted.fpe.*
 import restricted.fpe.advancements.critereon.PlayerIgnitedTrigger
 import restricted.fpe.enchant.HallowfireHeartEnchant
 import restricted.fpe.enchant.HotheadEnchant
+import restricted.fpe.item.FireExtinguisherItem
 import kotlin.random.Random
 
 @SubscribeEvent
@@ -92,9 +97,18 @@ fun onPlayerTick(e: TickEvent.PlayerTickEvent) {
 
 @SubscribeEvent
 fun onBiomeLoading(e: BiomeLoadingEvent) {
-    if (e.category == Biome.BiomeCategory.NETHER || e.category == Biome.BiomeCategory.THEEND)
-        return
-    e.generation.getFeatures(GenerationStep.Decoration.TOP_LAYER_MODIFICATION)
-        .add(FPEConst.Placements.NaturalFireHydrant)
-    // e.generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, FPEConst.Placements.NaturalFireHydrant)
+	if(e.category == Biome.BiomeCategory.NETHER || e.category == Biome.BiomeCategory.THEEND)
+		return
+	e.generation.getFeatures(GenerationStep.Decoration.TOP_LAYER_MODIFICATION)
+		.add(FPEConst.Placements.NaturalFireHydrant)
+	// e.generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, FPEConst.Placements.NaturalFireHydrant)
+}
+
+@SubscribeEvent
+fun addCustomTrades(e: VillagerTradesEvent) {
+	if(e.type == FPE.VillagerProfessions.Firefighter) {
+		e.trades.get(1).add(VillagerTrades.ItemListing { _, _ ->
+			MerchantOffer(ItemStack(MinecraftItems.EMERALD, 5), FireExtinguisherItem.FireSavior.copy(), 4, 12, 0.09F)
+		})
+	}
 }

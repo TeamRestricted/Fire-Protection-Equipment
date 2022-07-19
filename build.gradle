@@ -36,7 +36,7 @@ group = "com.github.teamrestricted"
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    mappings channel: "parchment", version: "2022.03.13-1.18.2"
+    mappings channel: "parchment", version: "2022.07.17-1.18.2"
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -45,6 +45,8 @@ minecraft {
             workingDirectory project.file("run_client")
             property "forge.logging.markers", "REGISTRIES"
             property "forge.logging.console.level", "debug"
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods.create(modId) { it.source sourceSets.main }
         }
 
@@ -52,6 +54,8 @@ minecraft {
             workingDirectory project.file("run_server")
             property "forge.logging.markers", "REGISTRIES"
             property "forge.logging.console.level", "debug"
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods.create(modId) { it.source sourceSets.main }
         }
 
@@ -78,7 +82,7 @@ repositories {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:1.18.2-40.1.25"
+    minecraft "net.minecraftforge:forge:1.18.2-40.1.0"
 
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 
@@ -90,6 +94,9 @@ dependencies {
 
     compileOnly fg.deobf("mezz.jei:jei-1.18.2:${project.jeiVersion}:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.18.2:${project.jeiVersion}")
+
+    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${project.patchouliVersion}")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${project.patchouliVersion}")
 }
 
 jar {

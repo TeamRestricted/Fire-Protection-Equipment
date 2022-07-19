@@ -1,0 +1,12 @@
+{
+  "sortnum": 0,
+  "name": "patchouli.fire_protection_equipment.book.entries.overview.extinguish_star.name",
+  "icon": "minecraft:firework_star",
+  "category": "fire_protection_equipment:overview",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "patchouli.fire_protection_equipment.book.entries.overview.extinguish_star.pages.0.text"
+    }
+  ]
+}

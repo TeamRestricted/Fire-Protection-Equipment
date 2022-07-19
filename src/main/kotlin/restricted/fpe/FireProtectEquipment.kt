@@ -2,14 +2,18 @@
 
 package restricted.fpe
 
+import com.google.common.collect.ImmutableSet
 import net.minecraft.core.particles.SimpleParticleType
 import net.minecraft.data.worldgen.features.FeatureUtils
 import net.minecraft.data.worldgen.placement.PlacementUtils
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.entity.ai.village.poi.PoiType
+import net.minecraft.world.entity.npc.VillagerProfession
 import net.minecraft.world.item.*
 import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.level.block.Block
@@ -21,6 +25,7 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 import net.minecraft.world.level.levelgen.placement.*
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.event.lifecycle.*
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper
 import net.minecraftforge.registries.DeferredRegister
 import net.minecraftforge.registries.ForgeRegistries
 import org.apache.logging.log4j.LogManager
@@ -49,6 +54,8 @@ object FPE {
 		BlockEntityTypes.registry.register(MOD_BUS)
 		Blocks.registry.register(MOD_BUS)
 		Items.registry.register(MOD_BUS)
+		PoiTypes.registry.register(MOD_BUS)
+		VillagerProfessions.registry.register(MOD_BUS)
 
 		runForDist(
 			clientTarget = { MOD_BUS.addListener(::clientSetup) },
@@ -70,6 +77,7 @@ object FPE {
 
     private fun serverSetup(e: FMLDedicatedServerSetupEvent) {
         e.enqueueWork {
+			registerPoiTypes()
         }
     }
 
@@ -191,6 +199,22 @@ object FPE {
 		val SpreadingFire by registry.registerObject("spreading_fire") { SpreadingFireEffect }
 	}
 
+	object PoiTypes {
+		internal val registry: DeferredRegister<PoiType> = DeferredRegister.create(ForgeRegistries.POI_TYPES, ModId)
+
+		val Firefighter by registry.registerObject("firefighter") {
+			PoiType("firefighter", PoiType.getBlockStates(Blocks.FireAlarmControlUnit), 1, 1)
+		}
+	}
+
+	object VillagerProfessions {
+		internal val registry: DeferredRegister<VillagerProfession> = DeferredRegister.create(ForgeRegistries.PROFESSIONS, ModId)
+
+		val Firefighter by registry.registerObject("firefighter") {
+			VillagerProfession("firefighter", PoiTypes.Firefighter, ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_WEAPONSMITH)
+		}
+	}
+
 	@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 	object BlockEntityTypes {
 		internal val registry: DeferredRegister<BlockEntityType<*>> =
@@ -220,6 +244,10 @@ object FPE {
 		internal val registry = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, ModId)
 
 		val WaterFluid by registry.registerObject("water_fluid") { SimpleParticleType(false) }
+	}
+
+	private fun registerPoiTypes() {
+		ObfuscationReflectionHelper.findMethod(PoiType::class.java, "registerBlockStates", PoiType::class.java).invoke(null, PoiTypes.Firefighter)
 	}
 
 	@JvmStatic

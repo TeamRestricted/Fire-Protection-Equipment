@@ -1,0 +1,27 @@
+{
+    "sortnum": 1,
+    "name": "patchouli.fire_protection_equipment.book.entries.overview.fire_devices.name",
+    "icon": "fire_protection_equipment:fire_alarm_control_unit",
+    "category": "fire_protection_equipment:overview",
+    "pages": [
+      {
+        "type": "patchouli:text",
+        "text": "patchouli.fire_protection_equipment.book.entries.overview.fire_devices.pages.0.text"
+      },
+      {
+        "type": "patchouli:spotlight",
+        "item": "fire_protection_equipment:fire_detector",
+        "text": "patchouli.fire_protection_equipment.book.entries.overview.fire_devices.pages.1.text"
+      },
+      {
+        "type": "patchouli:spotlight",
+        "item": "fire_protection_equipment:fire_sprinkler",
+        "text": "patchouli.fire_protection_equipment.book.entries.overview.fire_devices.pages.2.text"
+      },
+      {
+        "type": "patchouli:spotlight",
+        "item": "fire_protection_equipment:fire_alarm_control_unit",
+        "text": "patchouli.fire_protection_equipment.book.entries.overview.fire_devices.pages.3.text"
+      }
+    ]
+  }

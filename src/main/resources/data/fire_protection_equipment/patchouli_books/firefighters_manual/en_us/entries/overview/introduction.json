@@ -1,0 +1,17 @@
+{
+  "sortnum": 0,
+  "name": "patchouli.fire_protection_equipment.book.entries.overview.introduction.name",
+  "icon": "fire_protection_equipment:fire",
+  "category": "fire_protection_equipment:overview",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "patchouli.fire_protection_equipment.book.entries.overview.introduction.pages.0.text"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "patchouli.fire_protection_equipment.book.entries.overview.introduction.pages.1.title",
+      "text": "patchouli.fire_protection_equipment.book.entries.overview.introduction.pages.1.text"
+    }
+  ]
+}
