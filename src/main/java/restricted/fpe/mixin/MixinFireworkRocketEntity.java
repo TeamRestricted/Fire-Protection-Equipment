@@ -40,7 +40,7 @@ public abstract class MixinFireworkRocketEntity {
 				ExtinguishType type = ExtinguishType.fromString(((CompoundTag) explosionTag).getString("Extinguish"));
 				if(type != null) {
 					Entity owner = this$fw.getOwner();
-					ExtinguishContext ctx = new ExtinguishContext(this$fw.level, this$fw.blockPosition(),
+					ExtinguishContext ctx = new ExtinguishContext(this$fw.level, this$fw.position(),
 							Mth.ceil(5.0F + explosionsTag.size() * 0.85F), type,
 							owner instanceof Player ? (Player) owner : null, stack);
 					FPE.extinguishFire(ctx);

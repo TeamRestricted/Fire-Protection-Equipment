@@ -46,7 +46,7 @@ internal fun createItemStackForBlockStateTag(block: Block, blockState: CompoundT
 	}
 
 internal val Vec3.pos get() = BlockPos(x, y, z)
-internal val BlockPos.vec3 get() = Vec3(x + 0.5, y + 0.5, z + 0.5)
+internal val BlockPos.centralVec3 get() = Vec3(x + 0.5, y + 0.5, z + 0.5)
 
 internal fun boundingBoxOfCenter(center: BlockPos, xOff: Int, yOff: Int = xOff, zOff: Int = xOff) =
 	BoundingBox(center.x - xOff, center.y - yOff, center.z - zOff, center.x + xOff, center.y + yOff, center.z + zOff)

@@ -60,11 +60,11 @@ object FireSprinklerBlock : BaseEntityBlock(FPEConst.BlockConst.FireSprinklerPro
 			}
 
 			if(be.waterSprinkling) {
-				ExtinguishContext(level, pos, 3, ExtinguishType.WATER).process()
-				sendParticles(ParticleTypes.RAIN, pos.vec3.add(0.0, -2.5, 0.0), 100, 0.2, offset = Vec3(4.0, 2.5, 4.0))
+				ExtinguishContext(level, pos.centralVec3, 3, ExtinguishType.WATER).process()
+				sendParticles(ParticleTypes.RAIN, pos.centralVec3.add(0.0, -2.5, 0.0), 100, 0.2, offset = Vec3(4.0, 2.5, 4.0))
 			}
 			if(be.overloaded) {
-				sendParticles(ParticleTypes.SMOKE, pos.vec3.add(0.0, 0.15, 0.0), 5, 0.2)
+				sendParticles(ParticleTypes.SMOKE, pos.centralVec3.add(0.0, 0.15, 0.0), 5, 0.2)
 			}
 		}
 	}

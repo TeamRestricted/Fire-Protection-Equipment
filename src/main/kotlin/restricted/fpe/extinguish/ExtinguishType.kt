@@ -6,6 +6,8 @@ enum class ExtinguishType {
 	WATER, // 水
 	DRY_ICE, // 干冰
 
+	FIRE_SAVIOR, // 救火器类型
+
 	NONE;
 
 	val value: String get() = name.lowercase()

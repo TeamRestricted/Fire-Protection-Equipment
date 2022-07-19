@@ -62,7 +62,7 @@ object LinkingDeviceItem : Item(FPEConst.ItemConst.DefaultNonStackableItemProp) 
 						if(pos.closerThan(selectedPos, 16.0)) {
 							thisBe.bind(selectedBe)
 							level.playSound(null, pos, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.BLOCKS, 1.0F, 1.0F)
-							ParticleUtils.getRoutingVec3s(thisBe.blockPos.vec3, selectedBe.blockPos.vec3, 0.5).forEach {
+							ParticleUtils.getRoutingVec3s(thisBe.blockPos.centralVec3, selectedBe.blockPos.centralVec3, 0.5).forEach {
 								level.runOnRemote {
 									sendParticles(ParticleTypes.FLAME, it, 10, 0.0)
 								}
@@ -87,7 +87,7 @@ object LinkingDeviceItem : Item(FPEConst.ItemConst.DefaultNonStackableItemProp) 
 					if(boundToLocation != null) {
 						val boundBe = level.getBlockEntity(boundToLocation)
 						if(boundBe != null) {
-							ParticleUtils.getRoutingVec3s(thisBe.blockPos.vec3, boundBe.blockPos.vec3, 0.5).forEach {
+							ParticleUtils.getRoutingVec3s(thisBe.blockPos.centralVec3, boundBe.blockPos.centralVec3, 0.5).forEach {
 								level.runOnRemote {
 									sendParticles(ParticleTypes.FLAME, it, 10, 0.0)
 								}
@@ -107,7 +107,7 @@ object LinkingDeviceItem : Item(FPEConst.ItemConst.DefaultNonStackableItemProp) 
 						ctx.player?.sendMessage(TranslatableComponent(TranslationBoundNothing), Util.NIL_UUID)
 					} else {
 						devices.forEach {
-							ParticleUtils.getRoutingVec3s(thisBe.blockPos.vec3, it.vec3, 0.5).forEach {
+							ParticleUtils.getRoutingVec3s(thisBe.blockPos.centralVec3, it.centralVec3, 0.5).forEach {
 								level.runOnRemote {
 									sendParticles(ParticleTypes.FLAME, it, 10, 0.0)
 								}

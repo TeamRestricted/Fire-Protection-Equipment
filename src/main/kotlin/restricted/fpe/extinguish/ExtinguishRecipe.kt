@@ -49,6 +49,7 @@ object ExtinguishRecipe {
 
 	internal val recipes: Table<MiniBlockState, ExtinguishType, ExtinguishBlockFunction> = HashBasedTable.create()
 	internal val recipesEntity: Table<EntityType<*>, ExtinguishType, ExtinguishEntityFunction> = HashBasedTable.create()
+	internal val recipeAnimation: MutableMap<ExtinguishType, ExtinguishAnimationFunction> = mutableMapOf()
 
 	internal val invalidBlocks = mutableListOf<Block>(
 		MinecraftBlocks.AIR
@@ -103,6 +104,11 @@ object ExtinguishRecipe {
 		entityType: EntityType<*>, extinguishType: ExtinguishType, func: ExtinguishEntityFunction
 	) = recipesEntity.put(entityType, extinguishType, func)
 
+	fun registerAnimation(
+		extinguishType: ExtinguishType,
+		func: ExtinguishAnimationFunction
+	) { recipeAnimation[extinguishType] = func }
+
 	operator fun get(blockState: BlockState, extinguishType: ExtinguishType): ExtinguishBlockFunction? {
 		if(blockState.block in invalidBlocks) return null
 
@@ -117,11 +123,15 @@ object ExtinguishRecipe {
 		return recipesEntity[entityType, extinguishType]
 	}
 
+	fun getForAnimation(extinguishType: ExtinguishType): ExtinguishAnimationFunction {
+		return recipeAnimation[extinguishType] ?: {}
+	}
+
 	//////// FAST FUNCTIONS
 
 	private fun canDefaultExtinguish(ctx: ExtinguishContext): Boolean =
 		(ctx.itemstack == null) || (ctx.itemstack.item == FPE.Items.FireExtinguisher && FireExtinguisherItem.canExtinguishFire(
-			ctx, ctx.centerPos
+			ctx, ctx.centerPos.pos
 		)) || (ctx.itemstack.item == MinecraftItems.FIREWORK_ROCKET && FireworkHelper.hasExtinguishingStar(ctx.itemstack))
 
 	private val DIRECTLY_EXTINGUISH: ExtinguishBlockFunction = { ctx, _, pos ->
@@ -129,7 +139,7 @@ object ExtinguishRecipe {
 			ctx.level.removeBlock(pos, false)
 		}
 		ctx.level.runOnRemote {
-			sendParticles(ParticleTypes.CLOUD, pos.vec3, (1..20).random(), 0.2)
+			sendParticles(ParticleTypes.CLOUD, pos.centralVec3, (1..20).random(), 0.2)
 		}
 	}
 
@@ -140,7 +150,7 @@ object ExtinguishRecipe {
 			ctx.level.setBlockAndUpdate(pos, newState)
 		}
 		ctx.level.runOnRemote {
-			sendParticles(ParticleTypes.CLOUD, pos.vec3, (1..20).random(), 0.2)
+			sendParticles(ParticleTypes.CLOUD, pos.centralVec3, (1..20).random(), 0.2)
 		}
 	}
 
@@ -233,3 +243,4 @@ object ExtinguishRecipe {
 
 typealias ExtinguishBlockFunction = (ExtinguishContext, BlockState, BlockPos) -> Unit
 typealias ExtinguishEntityFunction = (ExtinguishContext, Entity) -> Unit
+typealias ExtinguishAnimationFunction = (ExtinguishContext) -> Unit

@@ -28,10 +28,10 @@ object FireExtinguishingBombBlock : Block(FPEConst.BlockConst.FireExtinguishingB
 		ignitePlayer: Player? = null
 	) {
 		level.removeBlock(pos, false)
-		ExtinguishContext(level, pos, 8, ExtinguishType.DRY_ICE, player = ignitePlayer).process()
+		ExtinguishContext(level, pos.centralVec3, 8, ExtinguishType.DRY_ICE, player = ignitePlayer).process()
 		level.playSound(null, pos, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 4F, 1F)
 		level.runOnRemote {
-			sendParticles(ParticleTypes.EXPLOSION, pos.vec3, 10, 0.2)
+			sendParticles(ParticleTypes.EXPLOSION, pos.centralVec3, 10, 0.2)
 		}
 	}
 

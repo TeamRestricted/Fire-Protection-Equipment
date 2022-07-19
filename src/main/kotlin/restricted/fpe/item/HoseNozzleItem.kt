@@ -53,7 +53,7 @@ object HoseNozzleItem : Item(FPEConst.ItemConst.DefaultNonStackableItemProp) {
 			hit.entity.hurt(DamageSource.FLY_INTO_WALL, 1.0F)
 		}
 		if(hit is BlockHitResult) {
-			val ctx = ExtinguishContext(player.level, hit.blockPos, 2, ExtinguishType.WATER, player as? Player, null)
+			val ctx = ExtinguishContext(player.level, hit.location, 2, ExtinguishType.WATER, player as? Player, null)
 			FPE.extinguishFire(ctx)
 		}
 	}

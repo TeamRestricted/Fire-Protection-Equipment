@@ -108,6 +108,13 @@ private fun registerLanguages() = FPELanguage.apply {
 		zh("空灭火器")
 		tw("空滅火器")
 	}
+
+	add("item.fire_protection_equipment.fire_extinguisher.fire_savior") {
+		en("Fire Savior")
+		zh("救火器")
+		tw("救火器")
+	}
+
 	// extinguisher variants end
 
 	item(FPE.Items.HoseNozzle) {

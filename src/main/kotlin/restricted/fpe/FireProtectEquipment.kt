@@ -247,8 +247,10 @@ object FPE {
 			val func = ExtinguishRecipe.getForEntity(it.type, extinType)
 			if(func != null) {
 				func(context, it)
-				// logger.debug("Executed the Entity ExtinguishRecipe for $it with type $extinType")
+				logger.debug("Executed the Entity ExtinguishRecipe for $it with type $extinType")
 			}
 		}
+		// play animation
+		ExtinguishRecipe.getForAnimation(extinType)(context)
 	}
 }

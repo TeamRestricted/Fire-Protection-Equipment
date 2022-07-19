@@ -9,7 +9,6 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.*
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.dimension.DimensionType
 import restricted.fpe.*
 import restricted.fpe.extinguish.*
 
@@ -58,12 +57,19 @@ object FireExtinguisherItem : Item(FPEConst.ItemConst.FireExtinguisherProp) {
 		}
 	}
 
+	val FireSavior: ItemStack = defaultInstance.copy().apply {
+		getOrCreateTagElement(TAG_EXTINGUISHER).also {
+			it.extinguisherType = ExtinguishType.FIRE_SAVIOR
+		}
+	}
+
 	override fun fillItemCategory(pCategory: CreativeModeTab, items: NonNullList<ItemStack>) {
 		if(allowdedIn(pCategory)) {
 			items += DryChemicalTyped.copy()
 			items += FoamsTyped.copy()
 			items += WaterTyped.copy()
 			items += DryIceTyped.copy()
+			items += FireSavior.copy()
 		}
 	}
 
@@ -113,7 +119,7 @@ object FireExtinguisherItem : Item(FPEConst.ItemConst.FireExtinguisherProp) {
 	override fun releaseUsing(stack: ItemStack, world: Level, entity: LivingEntity, chargedTime: Int) {
 		if(entity is Player) {
 			val hit = entity.pick(10.0, 1.0F, false)
-			val extinguishLoc = hit.location.pos
+			val extinguishLoc = hit.location
 			val extinguishLevel = getExtinguisherLevel(world, stack)
 			val ctx =
 				ExtinguishContext(world, extinguishLoc, extinguishLevel, getExtinguisherType(stack), player = entity, itemstack = stack)
