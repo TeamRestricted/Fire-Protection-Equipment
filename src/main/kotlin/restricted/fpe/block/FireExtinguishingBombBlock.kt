@@ -3,6 +3,8 @@ package restricted.fpe.block
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.LivingEntity
@@ -16,7 +18,6 @@ import restricted.fpe.*
 import restricted.fpe.extinguish.ExtinguishContext
 import restricted.fpe.extinguish.ExtinguishContext.Companion.process
 import restricted.fpe.extinguish.ExtinguishType
-import restricted.fpe.runOnRemote
 
 @Suppress("OVERRIDE_DEPRECATION")
 object FireExtinguishingBombBlock : Block(FPEConst.BlockConst.FireExtinguishingBombProp) {
@@ -28,6 +29,7 @@ object FireExtinguishingBombBlock : Block(FPEConst.BlockConst.FireExtinguishingB
 	) {
 		level.removeBlock(pos, false)
 		ExtinguishContext(level, pos, 8, ExtinguishType.DRY_ICE, player = ignitePlayer).process()
+		level.playSound(null, pos, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 4F, 1F)
 		level.runOnRemote {
 			sendParticles(ParticleTypes.EXPLOSION, pos.vec3, 10, 0.2)
 		}
