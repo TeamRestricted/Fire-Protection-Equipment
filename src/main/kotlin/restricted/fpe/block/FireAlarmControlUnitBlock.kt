@@ -3,6 +3,7 @@
 package restricted.fpe.block
 
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.BaseEntityBlock
@@ -42,6 +43,7 @@ object FireAlarmControlUnitBlock : BaseEntityBlock(FPEConst.BlockConst.HomeFireS
 				be.refreshedDeviceEntities = true
 				be.refreshDeviceEntitiesWhenWorldIsReady()
 			}
+			be.tick()
 		}
 	}
 
@@ -70,6 +72,19 @@ object FireAlarmControlUnitBlock : BaseEntityBlock(FPEConst.BlockConst.HomeFireS
 
 	override fun getRenderShape(pState: BlockState): RenderShape {
 		return RenderShape.MODEL
+	}
+
+	override fun isSignalSource(pState: BlockState): Boolean {
+		return true
+	}
+
+	override fun getDirectSignal(pState: BlockState, pLevel: BlockGetter, pPos: BlockPos, pDirection: Direction): Int {
+		return getSignal(pState, pLevel, pPos, pDirection)
+	}
+
+	override fun getSignal(pState: BlockState, pLevel: BlockGetter, pPos: BlockPos, pDirection: Direction): Int {
+		val be = pLevel.getBlockEntity(pPos)
+		return if(be is HomeFireStationBlockEntity && be.onFire) 15 else 0
 	}
 
 }

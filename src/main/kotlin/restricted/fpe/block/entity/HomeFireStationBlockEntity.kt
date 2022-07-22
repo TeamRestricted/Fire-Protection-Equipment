@@ -21,6 +21,15 @@ class HomeFireStationBlockEntity(pos: BlockPos, state: BlockState) :
 
 	val onFire: Boolean get() = connectedDevices.any { it.onFire }
 
+	private var lastOnFire = false
+
+	fun tick() {
+		if(lastOnFire != onFire) {
+			lastOnFire = onFire
+			level?.updateNeighborsAt(blockPos, blockState.block)
+		}
+	}
+
 	fun registerDevice(entity: AbstractHomeFireDevice<*>) {
 		connectedDevices += entity
 		connectedDevicesPos += entity.blockPos.asLong()
