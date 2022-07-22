@@ -4,10 +4,9 @@ import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.MobSpawnType
+import net.minecraft.world.entity.animal.Fox
 import net.minecraft.world.entity.item.ItemEntity
-import net.minecraft.world.entity.monster.MagmaCube
-import net.minecraft.world.entity.monster.Zombie
+import net.minecraft.world.entity.monster.*
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
@@ -79,14 +78,15 @@ object BuiltInRecipes {
 					if(magma is MagmaCube) {
 						playSound(null, magma, SoundEvents.WATER_AMBIENT, SoundSource.PLAYERS, 1.0F, 1.0F)
 						sendParticles(ParticleTypes.EXPLOSION, magma.eyePosition, 20, 0.2)
-						val magmaSize = magma.size
-						val slime = EntityType.SLIME.create(
-							this, null, null, ctx.player, magma.onPos, MobSpawnType.TRIGGERED, true, true
-						)!!
-						slime.yBodyRot = magma.yBodyRot
-						slime.setSize(magmaSize, true)
-						magma.discard()
-						addFreshEntity(slime)
+						val slime = magma.convertTo(EntityType.SLIME, true)
+//						val magmaSize = magma.size
+//						val slime = EntityType.SLIME.create(
+//							this, null, null, ctx.player, magma.onPos, MobSpawnType.TRIGGERED, true, true
+//						)!!
+//						slime.yBodyRot = magma.yBodyRot
+//						slime.setSize(magmaSize, true)
+//						magma.discard()
+//						addFreshEntity(slime)
 					}
 				}
 			}
@@ -107,13 +107,73 @@ object BuiltInRecipes {
 		ExtinguishRecipe.builder(EntityType.ZOMBIE) {
 			water { ctx, zombie ->
 				if(zombie.level.random.nextFloat() > 0.95F && zombie is Zombie) {
-					zombie.level.runOnRemote {
+					ctx.level.runOnRemote {
 						playSound(null, zombie, SoundEvents.WATER_AMBIENT, SoundSource.PLAYERS, 1.0F, 1.0F)
 						sendParticles(ParticleTypes.EXPLOSION, zombie.eyePosition, 20, 0.2)
-						val drowned = EntityType.DROWNED.create(this, null, null, ctx.player, zombie.onPos, MobSpawnType.TRIGGERED, true, true)!!
-						drowned.yBodyRot = zombie.yBodyRot
-						zombie.discard()
-						addFreshEntity(drowned)
+						zombie.convertTo(EntityType.DROWNED, true)
+//						val drowned = EntityType.DROWNED.create(this, null, null, ctx.player, zombie.onPos, MobSpawnType.TRIGGERED, true, true)!!
+//						drowned.yBodyRot = zombie.yBodyRot
+//						zombie.discard()
+//						addFreshEntity(drowned)
+					}
+				}
+			}
+		}
+
+		// 史莱姆变岩浆怪
+		ExtinguishRecipe.registerEntity(EntityType.SLIME, ExtinguishType.FIRE_SAVIOR) { ctx, slime ->
+			ctx.level.runOnRemote {
+				if(slime is Slime) {
+					playSound(null, slime, SoundEvents.WATER_AMBIENT, SoundSource.PLAYERS, 1.0F, 1.0F)
+					sendParticles(ParticleTypes.EXPLOSION, slime.eyePosition, 20, 0.2)
+					slime.convertTo(EntityType.MAGMA_CUBE, true)
+//					val slimeSize = slime.size
+//					val magma = EntityType.MAGMA_CUBE.create(
+//						this, null, null, ctx.player, slime.onPos, MobSpawnType.TRIGGERED, true, true
+//					)!!
+//					magma.yBodyRot = slime.yBodyRot
+//					magma.setSize(slimeSize, true)
+//					slime.discard()
+//					addFreshEntity(magma)
+				}
+			}
+		}
+
+		// 骷髅变流浪者
+		ExtinguishRecipe.registerEntity(EntityType.SKELETON, ExtinguishType.DRY_ICE) { ctx, skeleton ->
+			ctx.level.runOnRemote {
+				if(skeleton is Skeleton) {
+					playSound(null, skeleton, SoundEvents.WATER_AMBIENT, SoundSource.PLAYERS, 1.0F, 1.0F)
+					sendParticles(ParticleTypes.EXPLOSION, skeleton.eyePosition, 20, 0.2)
+					skeleton.convertTo(EntityType.STRAY, true)
+				}
+			}
+		}
+
+		// 红狐狸变雪狐狸
+		// 狐狸真是太棒了，多来点！
+		ExtinguishRecipe.builder(EntityType.FOX) {
+			otherwise { ctx, fox ->
+				ctx.level.runOnRemote {
+					if(fox is Fox && fox.foxType == Fox.Type.RED) {
+						playSound(null, fox, SoundEvents.WATER_AMBIENT, SoundSource.PLAYERS, 1.0F, 1.0F)
+						sendParticles(ParticleTypes.EXPLOSION, fox.eyePosition, 20, 0.2)
+						fox.foxType = Fox.Type.SNOW
+					}
+				}
+			}
+		}
+
+		// 干冰秒潜影贝
+		ExtinguishRecipe.registerEntity(EntityType.SHULKER, ExtinguishType.DRY_ICE) { ctx, shulker ->
+			if(shulker is Shulker) {
+				ctx.level.runOnRemote {
+					if(shulker.isAlive) {
+						shulker.hurt(FPEConst.DamageSourceConst.Extinguish, 100.0F)
+						val itemEntity = ItemEntity(
+							this, shulker.x, shulker.y, shulker.z, ItemStack(MinecraftItems.SHULKER_SHELL, (2..3).random())
+						)
+						addFreshEntity(itemEntity)
 					}
 				}
 			}
