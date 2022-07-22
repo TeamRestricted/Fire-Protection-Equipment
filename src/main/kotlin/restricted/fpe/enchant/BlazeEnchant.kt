@@ -2,10 +2,10 @@ package restricted.fpe.enchant
 
 import net.minecraft.world.entity.*
 import net.minecraft.world.item.enchantment.Enchantment
-import restricted.fpe.FPEConst.EnchantCategory.BowAndCrossbowCategory
+import net.minecraft.world.item.enchantment.EnchantmentCategory
 import restricted.fpe.potion.SpreadingFireEffect
 
-object BlazeEnchant: Enchantment(Rarity.VERY_RARE, BowAndCrossbowCategory, arrayOf(EquipmentSlot.MAINHAND)) {
+object BlazeEnchant: Enchantment(Rarity.VERY_RARE, EnchantmentCategory.CROSSBOW, arrayOf(EquipmentSlot.MAINHAND)) {
 
 	override fun getMaxLevel(): Int = 5
 

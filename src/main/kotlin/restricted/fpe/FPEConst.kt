@@ -10,7 +10,6 @@ import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.*
 import net.minecraft.world.item.crafting.Ingredient
-import net.minecraft.world.item.enchantment.EnchantmentCategory
 import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.block.state.properties.EnumProperty
@@ -72,7 +71,7 @@ object FPEConst {
 	}
 
 	object EnchantCategory {
-		val BowAndCrossbowCategory: EnchantmentCategory = EnchantmentCategory.create("bow_and_crossbow") { it is BowItem || it is CrossbowItem }
+		// val BowAndCrossbowCategory: EnchantmentCategory = EnchantmentCategory.create("bow_and_crossbow") { it is BowItem || it is CrossbowItem }
 	}
 
 	object CriteriaNames {
