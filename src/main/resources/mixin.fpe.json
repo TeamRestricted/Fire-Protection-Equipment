@@ -8,7 +8,6 @@
     "MixinFireworkRocketEntity",
     "MixinFireworkStarItem",
     "MixinFireworkStarRecipe",
-    "MixinFurnaceTileEntity",
     "MixinLivingEntity"
   ],
   "client": [],
